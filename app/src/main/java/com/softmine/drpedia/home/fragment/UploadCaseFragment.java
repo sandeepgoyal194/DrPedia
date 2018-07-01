@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import com.sachin.doctorsguide.R;
 import com.softmine.drpedia.home.CaseUploadView;
@@ -36,9 +37,9 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
 
 
     @BindView(R.id.postType)
-    AutoCompleteTextView caseType;
+    EditText caseType;
     @BindView(R.id.postDesc)
-    AutoCompleteTextView caseDesc;
+    EditText caseDesc;
 
     String imageType;
 
@@ -75,7 +76,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
         return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
     }
 
-    @OnClick(R.id.selectImageBtn)
+    /*@OnClick(R.id.selectImageBtn)
     public void selectCaseImage()
     {
         uploadCasePresentor.selectCaseImage();
@@ -86,7 +87,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     {
         uploadCasePresentor.uploadCaseDetails();
     }
-
+*/
 
     @Override
     public void selectImageFromStorage() {
