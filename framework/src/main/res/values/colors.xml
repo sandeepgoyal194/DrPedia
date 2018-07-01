@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#263346</color>
+    <color name="colorPrimaryDark">#263346</color>
+    <color name="colorAccent">#a40800</color>
+    <color name="colorborder">#c9c9c9</color>
+    <color name="black">#000000</color>
+    <color name="grey">#b1b0b0</color>
+    <color name="white">#ffffff</color>
+    <color name="facebook">#3d60a7</color>
+    <color name="nearwhite">#ffffff</color>
+    <color name="pitchblack">#000000</color>
+    <color name="maroon">#660000</color>
+    <color name="colorbottomnav">#ccc6bf</color>
+    <color name="mainToolbar">#4b9f83</color>
+    <color name="sinch_purple">#ff63029d</color>
+    <color name="greyish">#fff2f1f2</color>
+    <color name="colorLightGray">#f2f2f2</color>
+    <color name="transparent">#00000000</color>
+</resources>
