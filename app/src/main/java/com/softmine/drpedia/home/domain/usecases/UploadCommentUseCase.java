@@ -1,7 +1,6 @@
 package com.softmine.drpedia.home.domain.usecases;
 
 import android.util.Log;
-
 import com.softmine.drpedia.home.domain.repositry.ICaseStudyRepository;
 
 import javax.inject.Inject;

@@ -16,7 +16,7 @@ public class GetCaseStudyDataFactory {
 
     public ICaseStudyDataSource createCaseStudyDataSource()
     {
-        Log.d("imagelogs","image liked in createCaseStudyDataSource  factory view");
+        Log.d("bookmarkresponse","image liked in createCaseStudyDataSource  factory view");
         return this.getCaseStudyDataSource;
     }
 }

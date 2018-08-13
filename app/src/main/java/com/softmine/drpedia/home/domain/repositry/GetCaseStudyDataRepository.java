@@ -3,11 +3,14 @@ package com.softmine.drpedia.home.domain.repositry;
 
 import android.util.Log;
 
+import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.domain.datasource.GetCaseStudyDataFactory;
+import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
 import com.softmine.drpedia.home.model.CommentData;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -29,6 +32,16 @@ public class GetCaseStudyDataRepository implements ICaseStudyRepository {
     @Override
     public Observable<List<CaseItem>> list() {
         return this.getCaseStudyDataFactory.createCaseStudyDataSource().caseStudyList();
+    }
+
+    @Override
+    public Observable<List<CaseItem>> myCaselist() {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().myCaseStudyList();
+    }
+
+    @Override
+    public Observable<List<BookmarkItem>> getBookmarklist() {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().getBookmarklist();
     }
 
     @Override
@@ -55,18 +68,33 @@ public class GetCaseStudyDataRepository implements ICaseStudyRepository {
     }
 
     @Override
-    public Observable<String> uploadCaseDetail(RequestBody requestCaseTypeID,RequestBody requestCaseDesc1, RequestBody requestCaseDesc2, MultipartBody.Part imageBody) {
+    public Observable<String> uploadCaseDetail(Map<String, RequestBody> partMap, List<MultipartBody.Part> files) {
         Log.d("uploadlogs","uploadCaseDetail in repo view");
+        Log.d("uploadlogs","data map size==="+partMap.size());
+        Log.d("uploadlogs","list size==="+files.size());
 
-        Log.d("uploadlogs","id==="+requestCaseTypeID.toString());
-        Log.d("uploadlogs","desc==="+requestCaseDesc2.toString());
-
-        return this.getCaseStudyDataFactory.createCaseStudyDataSource().uploadCaseDetail(requestCaseTypeID,requestCaseDesc1,requestCaseDesc2,imageBody);
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().uploadCaseDetail(partMap,files);
     }
 
     @Override
     public Observable<List<CaseItem>> getCaseItemDetail(int postId) {
         return this.getCaseStudyDataFactory.createCaseStudyDataSource().getCaseItemDetail(postId);
+    }
+
+    @Override
+    public Observable<LoginResponse> getUserProfile() {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().getUserProfile();
+    }
+
+    @Override
+    public Observable<LoginResponse> updateUserProfile(String userid, String userData) {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().updateUserProfile(userid , userData);
+    }
+
+    @Override
+    public Observable<String> reportFeedback(String feedbackBody) {
+        Log.d("feedbacklog","ReportFeedback repo");
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().reportFeedback(feedbackBody);
     }
 
 

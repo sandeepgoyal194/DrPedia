@@ -4,12 +4,47 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    String name;
+
     String userid;
-    String photourl;
+    String name;
     String emailid;
+    String photourl;
     String gender;
+    String dob;
     String authToken;
+    String mobile_no;
+
+    public User() {
+    }
+
+    public User(User user) {
+        userid = user.getUserid();
+        name = user.getName();
+        photourl = user.getPhotoUrl();
+        gender = user.getGender();
+        mobile_no = user.getMobile_no();
+        emailid = user.getEmailid();
+        dob = user.getDob();
+    }
+
+    public String getMobile_no() {
+        return mobile_no;
+    }
+
+    public void setMobile_no(String mobile_no) {
+        this.mobile_no = mobile_no;
+    }
+
+
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
 
     public String getName() {
         return name;

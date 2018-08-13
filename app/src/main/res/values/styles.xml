@@ -13,13 +13,12 @@
 
 
 
-    <style name="AppTheme.ActionBar.Transparent" parent="Theme.AppCompat.Light">
+    <style name="AppTheme.ActionBar.Transparent" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="colorControlNormal">@color/textColor</item>
-         <item name="android:titleTextColor">@color/textColor</item>
-</style>
-
+        <item name="android:titleTextColor">@color/textColor</item>
+    </style>
 
     <style name="AppTheme.ProgressBar">
         <item name="android:layout_width">wrap_content</item>
@@ -41,5 +40,16 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
+    <style name="ProgressBar" parent="@android:style/Theme.DeviceDefault.Dialog.Alert">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="SelectDataTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>/>
+    </style>
+
 
 </resources>

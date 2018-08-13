@@ -1,14 +1,19 @@
 package com.softmine.drpedia.home.activity;
 
+import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.sachin.doctorsguide.R;
+
+import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.di.ActivityModule;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.di.DaggerCaseStudyComponent;
@@ -21,7 +26,7 @@ import frameworks.di.component.HasComponent;
 public class UploadCaseActivity extends AppCompatActivity implements HasComponent<CaseStudyComponent> {
 
     private CaseStudyComponent caseStudyComponent;
-
+    final int MY_PERMISSIONS_REQUEST_READ_MEDIA=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,23 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
         toolbar.setTitle(R.string.app_name);
         this.addFragment(savedInstanceState);
         this.initializeInjector();
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_MEDIA);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_MEDIA:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void addFragment(Bundle savedInstanceState)

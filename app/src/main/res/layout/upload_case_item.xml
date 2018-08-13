@@ -1,65 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.softmine.drpedia.home.activity.UploadCaseActivity">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:background="@drawable/boundry_black">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="center"
-                app:srcCompat="@drawable/bookmark" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Select To Upload Image"/>
+    android:background="@android:color/white"
+    tools:context="com.softmine.drpedia.home.fragment.UploadCaseFragment">
 
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/upload_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center"
-            android:visibility="gone"
-            app:srcCompat="@drawable/bookmark" />
-    </FrameLayout>
-
-    <android.support.design.widget.TextInputLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <EditText
-        android:id="@+id/postType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:hint="Enter Post Type"/>
-    </android.support.design.widget.TextInputLayout>
+    </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+    <include layout="@layout/content_main" />
 
-    <EditText
-        android:id="@+id/postDesc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Description"/>
-    </android.support.design.widget.TextInputLayout>
+    <!-- Adding bottom sheet after main content -->
+    <include layout="@layout/bottom_sheet" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

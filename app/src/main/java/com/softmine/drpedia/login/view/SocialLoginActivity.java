@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+
 import com.softmine.drpedia.CaseStudyAppApplication;
-import com.sachin.doctorsguide.R;
+import com.softmine.drpedia.R;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.activity.DashBoardActivity;
 import com.softmine.drpedia.login.di.DaggerSocialLoginComponent;
@@ -139,7 +140,7 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
     @Override
     public void startActivity() {
         Intent dashBoardIntent = new Intent(this, DashBoardActivity.class);
-        dashBoardIntent.putExtra("user",CaseStudyAppApplication.getParentApplication().getUser());
+     //   dashBoardIntent.putExtra("user",CaseStudyAppApplication.getParentApplication().getUser());
         startActivity(dashBoardIntent);
         finish();
     }

@@ -2,6 +2,7 @@ package com.softmine.drpedia.home.di;
 
 import android.content.Context;
 
+
 import com.softmine.drpedia.home.domain.datasource.GetCaseStudyDataFactory;
 import com.softmine.drpedia.home.domain.datasource.GetCaseStudyDataSource;
 import com.softmine.drpedia.home.domain.interceptor.RequestInterceptor;
@@ -55,7 +56,7 @@ public class GetCaseStudyListModule {
     @Provides
     OkHttpClient provideOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, AppSessionManager appSessionManager) {
         return new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
+                .connectTimeout(2, TimeUnit.MINUTES)
                 .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor(new RequestInterceptor(appSessionManager))
                 .addInterceptor(new ErrorResponseInterceptor(BaseResponseError.class))

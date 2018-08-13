@@ -3,6 +3,7 @@ package com.softmine.drpedia.home.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CaseItem implements Serializable{
 
@@ -63,13 +64,7 @@ public class CaseItem implements Serializable{
         this.total_bookmark = total_bookmark;
     }
 
-    public String getPostPicUrl() {
-        return postPicUrl;
-    }
 
-    public void setPostPicUrl(String postPicUrl) {
-        this.postPicUrl = postPicUrl;
-    }
 
     public String getPostLikeStatus() {
         return postLikeStatus;
@@ -96,12 +91,31 @@ public class CaseItem implements Serializable{
     private String total_comment;
     private String total_like;
     private String total_bookmark;
+
+    public List<CaseMediaItem> getPostPicUrl() {
+        return postPicUrl;
+    }
+
+    public void setPostPicUrl(List<CaseMediaItem> postPicUrl) {
+        this.postPicUrl = postPicUrl;
+    }
+
     @SerializedName(value="image_path")
-    private String postPicUrl;
+    private List<CaseMediaItem> postPicUrl;
     @SerializedName(value="likes")
     private String postLikeStatus;
     @SerializedName(value="bookmark")
     private String postBookmarkStatus;
+
+    public String getCreated_on() {
+        return created_on;
+    }
+
+    public void setCreated_on(String created_on) {
+        this.created_on = created_on;
+    }
+
+    private String created_on;
 
 
 

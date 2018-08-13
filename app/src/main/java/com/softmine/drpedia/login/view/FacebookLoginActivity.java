@@ -23,8 +23,6 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import frameworks.appsession.UserInfo;
-
 public class FacebookLoginActivity extends AppCompatActivity {
 
     int FACEBOOK_LOGIN_REQUEST_CODE = 21;
@@ -44,7 +42,6 @@ public class FacebookLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("Get Facebook Access");
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         accessTokenTracker = new AccessTokenTracker() {
@@ -101,12 +98,15 @@ public class FacebookLoginActivity extends AppCompatActivity {
         };
 
         LoginManager.getInstance().registerCallback(callbackManager, callback);
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends","email"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends","email","user_birthday"));
     }
 
 
     private void addProfile(final String token)
     {
+
+        Log.d("loginresponse","add profile called");
+
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -118,18 +118,29 @@ public class FacebookLoginActivity extends AppCompatActivity {
                         {
                             //UserInfo userInfo = null;
                             Profile profile = Profile.getCurrentProfile();
+
+                            Log.d("loginresponse","profile get");
                             if(profile!=null)
                             {
                                 Log.d("profile","name=="+profile.getName());
                                 Log.d("profile","id=="+profile.getId());
                                 Log.d("profile","photo url=="+profile.getProfilePictureUri(100,100).toString());
                                 Log.d("profile","email=="+object.getString("email"));
+                                Log.d("profile","name=="+object.getString("name"));
+                             //   Log.d("profile","gender=="+object.getString("gender"));
+                                Log.d("profile","dob=="+object.getString("birthday"));
+
+                                Log.d("profile",object.toString());
                                /* userInfo = new UserInfo();
                                 userInfo.setName(profile.getName());
                                 userInfo.setUser_id(profile.getId());
                                 userInfo.setProfile_picture(profile.getProfilePictureUri(300,300).toString());
                                 userInfo.setEmail(object.getString("email"));
                                 userInfo.setToken(token);*/
+                            }
+                            else
+                            {
+                                Log.d("loginresponse","profile null");
                             }
                             if(token!=null)
                             {
@@ -140,6 +151,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                             }
                             else {
                                 Log.d("profile","null");
+                                Log.d("loginresponse","profile null again");
                                 setResult(FACEBOOK_LOGIN_RESPONSE_FAILS);
                             }
 
@@ -151,7 +163,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "name,email");
+        parameters.putString("fields", "id,name,email,gender,birthday");
         request.setParameters(parameters);
         request.executeAsync();
     }

@@ -10,6 +10,7 @@
         style="@style/AppTheme.ProgressBar"
         android:keepScreenOn="true"
         android:layout_gravity="center"
+        android:translationZ="2dp"
         android:indeterminateDrawable="@mipmap/progress_bar"
         />
 

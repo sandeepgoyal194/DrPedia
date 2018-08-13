@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+
 import com.softmine.drpedia.home.CaseListView;
 import com.softmine.drpedia.home.di.PerActivity;
 import com.softmine.drpedia.home.domain.usecases.GetCaseStudyListUseCase;
@@ -45,8 +46,6 @@ public class CaseListPresentor implements ICaseListPresenter {
         this.loadCaseStudyList();
     }
 
-
-    final Handler handler = new Handler();
 
     @Override
     public void loadCaseStudyList() {

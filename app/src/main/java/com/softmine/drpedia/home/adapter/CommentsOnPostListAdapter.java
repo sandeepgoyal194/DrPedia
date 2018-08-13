@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sachin.doctorsguide.R;
+import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.glide.CircleTransform;
 import com.softmine.drpedia.home.model.CommentData;
+
 
 import java.util.Collection;
 import java.util.Collections;

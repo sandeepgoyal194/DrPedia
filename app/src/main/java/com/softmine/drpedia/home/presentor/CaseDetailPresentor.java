@@ -3,6 +3,7 @@ package com.softmine.drpedia.home.presentor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+
 import com.softmine.drpedia.home.CaseDetailView;
 import com.softmine.drpedia.home.domain.usecases.GetCaseDetailUseCase;
 import com.softmine.drpedia.home.domain.usecases.GetCaseStudyBookmarkUseCase;
@@ -51,7 +52,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
 
     private void hideViewLoading() {
-        Log.d("loginresponse","hide loading====================");
+        Log.d("ItemDetail","hide loading====================");
 
         this.caseDetailView.hideProgressBar();
     }
@@ -59,7 +60,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
     @Override
     public void doLikeorUnlikePost(String likeStatus, int postID) {
-        Log.d("imagelogs","image liked in presentor view");
+        Log.d("ItemDetail","image liked in presentor view");
      //   Toast.makeText(this.caseDetailView.getContext(),"image liked in presentor view",Toast.LENGTH_LONG).show();
         RequestParams requestParams =  GetCaseStudyLikeUseCase.createRequestParams(likeStatus,postID);
         CaseDetailPresentor.this.showViewLoading();
@@ -67,13 +68,13 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
             @Override
             public void onCompleted() {
 
-                Log.d("imagelogs","image liked in onCompleted view");
+                Log.d("ItemDetail","image liked in onCompleted view");
                 CaseDetailPresentor.this.hideViewLoading();
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("imagelogs","error occured while like image");
+                Log.d("ItemDetail","error occured while like image");
             //    CaseDetailPresentor.this.caseDetailView.updateLikeOrUnlikePost(true);
              //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
                     e.printStackTrace();
@@ -84,7 +85,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
             @Override
             public void onNext(String string) {
                 CaseDetailPresentor.this.caseDetailView.updateLikeOrUnlikePost(true);
-                Log.d("imagelogs","image liked in onNext view==========="+string);
+                Log.d("ItemDetail","image liked in onNext view==========="+string);
 
             }
         });
@@ -92,14 +93,14 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
     @Override
     public void doBookmarkPost(String bookmarkStatus, int postID) {
-        Log.d("imagelogs","image bookmarked in presentor view");
+        Log.d("ItemDetail","image bookmarked in presentor view");
         RequestParams requestParams =  GetCaseStudyBookmarkUseCase.createRequestParams(bookmarkStatus,postID);
         CaseDetailPresentor.this.showViewLoading();
         this.getCaseStudyBookmarkUseCase.execute(requestParams,new Subscriber<String>() {
             @Override
             public void onCompleted() {
                 // Call MainActivity to show list of feedbacks
-                Log.d("imagelogs","image bookmarked in onCompleted view");
+                Log.d("ItemDetail","image bookmarked in onCompleted view");
                 CaseDetailPresentor.this.hideViewLoading();
                 //  Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
             }
@@ -107,7 +108,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
             @Override
             public void onError(Throwable e) {
 
-                Log.d("imagelogs","image bookmarked in onError view");
+                Log.d("ItemDetail","image bookmarked in onError view");
                 CaseDetailPresentor.this.hideViewLoading();
                 CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while bookmark Post");
                 //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
@@ -116,7 +117,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
             @Override
             public void onNext(String string) {
-                Log.d("imagelogs","image bookmarked in onNext view");
+                Log.d("ItemDetail","image bookmarked in onNext view");
                 CaseDetailPresentor.this.caseDetailView.updateBookmarkUserPost(true);
             }
         });
@@ -124,14 +125,14 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
     @Override
     public void doUploadCommentOnPost(String comment , int postID) {
-        Log.d("imagelogs","comment on post in presentor view");
+        Log.d("ItemDetail","comment on post in presentor view");
         RequestParams requestParams = UploadCommentUseCase.createRequestParams(comment,postID);
         CaseDetailPresentor.this.showViewLoading();
         this.uploadCommentUseCase.execute(requestParams,new Subscriber<String>() {
             @Override
             public void onCompleted() {
                 // Call MainActivity to show list of feedbacks
-                Log.d("imagelogs","comment on post in onCompleted view");
+                Log.d("ItemDetail","comment on post in onCompleted view");
                 CaseDetailPresentor.this.hideViewLoading();
                 //  Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
             }
@@ -139,7 +140,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
             @Override
             public void onError(Throwable e) {
 
-                Log.d("imagelogs","comment on post in onError view");
+                Log.d("ItemDetail","comment on post in onError view");
                 CaseDetailPresentor.this.hideViewLoading();
                 CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while uploading comment on Post");
                 //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
@@ -148,7 +149,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
             @Override
             public void onNext(String string) {
-                Log.d("imagelogs","comment on post in onNext view");
+                Log.d("ItemDetail","comment on post in onNext view");
                 CaseDetailPresentor.this.caseDetailView.UpdateCommentOnPost(true);
             }
         });
@@ -157,21 +158,21 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
     @Override
     public void loadAllComments(int postid) {
-        Log.d("imagelogs","loadAllComments in presentor view");
-        Log.d("imagelogs","case id===="+postid);
+        Log.d("ItemDetail","loadAllComments in presentor view");
+        Log.d("ItemDetail","case id===="+postid);
         RequestParams requestParams =  GetCommentOnPostUseCase.createRequestParams(postid);
         CaseDetailPresentor.this.showViewLoading();
         this.getCommentOnPostUseCase.execute(requestParams,new Subscriber<List<CommentData>>() {
             @Override
             public void onCompleted() {
-                Log.d("imagelogs","onCompleted");
+                Log.d("ItemDetail","onCompleted");
                 CaseDetailPresentor.this.hideViewLoading();
             }
 
             @Override
             public void onError(Throwable e) {
 
-                Log.d("imagelogs","onError in loadComments");
+                Log.d("ItemDetail","onError in loadComments");
                 e.printStackTrace();
                 CaseDetailPresentor.this.hideViewLoading();
                 CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while loading comments on Post");
@@ -179,7 +180,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
             @Override
             public void onNext(List<CommentData> commentData) {
-                Log.d("imagelogs","onNext");
+                Log.d("ItemDetail","onNext");
                 CaseDetailPresentor.this.showAllCommentsInView(commentData);
             }
         });
@@ -200,21 +201,21 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
         this.getCaseDetailUseCase.execute(requestParams,new Subscriber<List<CaseItem>>() {
             @Override
             public void onCompleted() {
-                Log.d("loginresponse","onCompleted");
+                Log.d("ItemDetail","onCompleted");
                 CaseDetailPresentor.this.hideViewLoading();
 
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("loginresponse","onError");
+                Log.d("ItemDetail","onError");
                 CaseDetailPresentor.this.hideViewLoading();
                 e.printStackTrace();
             }
 
             @Override
             public void onNext(List<CaseItem> caseList) {
-                Log.d("loginresponse","onNext");
+                Log.d("ItemDetail","onNext");
                 CaseDetailPresentor.this.showCaseItemDetail(caseList);
             }
         });

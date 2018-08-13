@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/facebook_background"
-    tools:context="com.softmine.drpedia.login.view.SocialLoginActivity">
+    tools:context=".login.view.SocialLoginActivity">
 
     <FrameLayout
         android:id="@+id/fblogin"

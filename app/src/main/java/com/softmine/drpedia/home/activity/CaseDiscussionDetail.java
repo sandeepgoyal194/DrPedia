@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.sachin.doctorsguide.R;
+import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.di.ActivityModule;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.di.DaggerCaseStudyComponent;
@@ -40,7 +40,7 @@ public class CaseDiscussionDetail extends AppCompatActivity implements HasCompon
     {
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.fragmentDetailContainer,CaseDiscussionDetailFragment.forCaseItemDetail(caseItem));;
+            fragmentTransaction.add(R.id.fragmentDetailContainer, CaseDiscussionDetailFragment.forCaseItemDetail(caseItem));;
             fragmentTransaction.commit();
         }
     }

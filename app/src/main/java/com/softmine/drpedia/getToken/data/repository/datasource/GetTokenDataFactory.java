@@ -1,5 +1,6 @@
 package com.softmine.drpedia.getToken.data.repository.datasource;
 
+import com.softmine.drpedia.getToken.data.repository.datasource.GetTokenCloudDataSource;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 
 import javax.inject.Inject;

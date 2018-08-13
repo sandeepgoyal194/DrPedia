@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.login.domain.LoginFacebookUseCase;
+import com.softmine.drpedia.login.view.ILoginViewContractor;
 
 import javax.inject.Inject;
 
@@ -44,11 +45,15 @@ public class SocialLoginPresentor extends AppBasePresenter<ILoginViewContractor.
                // Log.d("loginresponse","api key==="+sessionValue.getApi_key());
                // getView().setAuthID(sessionValue);
                 Log.d("loginresponse","api key==="+loginResponse.getAuthToken());
-                Log.d("loginresponse","api key==="+loginResponse.getMessage());
-                Log.d("loginresponse","api key==="+loginResponse.getList().get(0).getName());
-                Log.d("loginresponse","api key==="+loginResponse.getList().get(0).getUserid());
-                Log.d("loginresponse","api key==="+loginResponse.getList().get(0).getPhotoUrl());
-                Log.d("loginresponse","api key==="+loginResponse.getList().get(0).getEmailid());
+                Log.d("loginresponse","message==="+loginResponse.getMessage());
+                Log.d("loginresponse","name==="+loginResponse.getList().get(0).getName());
+                Log.d("loginresponse","user id==="+loginResponse.getList().get(0).getUserid());
+                Log.d("loginresponse","photo url==="+loginResponse.getList().get(0).getPhotoUrl());
+                Log.d("loginresponse","email id==="+loginResponse.getList().get(0).getEmailid());
+                Log.d("loginresponse","gender==="+loginResponse.getList().get(0).getGender());
+                Log.d("loginresponse","DOB==="+loginResponse.getList().get(0).getDob());
+
+
                 getView().setLoginResponse(loginResponse);
             }
         });

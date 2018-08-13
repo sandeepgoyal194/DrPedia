@@ -35,5 +35,6 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.jaredrummler:material-spinner:1.2.5'
     compile 'com.ms-square:expandableTextView:0.1.4'
 }

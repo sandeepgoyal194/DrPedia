@@ -1,5 +1,6 @@
 package com.softmine.drpedia.getToken.domain;
 
+
 import com.softmine.drpedia.getToken.model.LoginResponse;
 
 import frameworks.network.usecases.RequestParams;

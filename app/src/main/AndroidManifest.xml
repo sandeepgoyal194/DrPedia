@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.sachin.doctorsguide">
+    package="com.softmine.drpedia">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+   <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.softmine.drpedia.CaseStudyAppApplication"
@@ -14,30 +16,28 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:theme="@style/AppTheme">
-        <meta-data
+       <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name="com.softmine.drpedia.login.view.SocialLoginActivity">
-        </activity>
+        <activity android:name=".login.view.SocialLoginActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
-        <activity android:name="com.softmine.drpedia.home.activity.DashBoardActivity"></activity>
-        <activity android:name="com.softmine.drpedia.home.activity.CaseDiscussionDetail"
-            android:theme="@style/AppTheme.ActionBar.Transparent"/>
-        <activity android:name="com.softmine.drpedia.home.activity.UploadCaseActivity">
-
-        </activity>
+        <activity android:name=".home.activity.DashBoardActivity" />
         <activity
-            android:name="com.softmine.drpedia.login.view.FacebookLoginActivity"
+            android:name=".home.activity.CaseDiscussionDetail"
+            android:theme="@style/AppTheme.ActionBar.Transparent" />
+        <activity android:name=".home.activity.UploadCaseActivity" />
+        <activity
+            android:name=".login.view.FacebookLoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
         <activity
-            android:name="com.softmine.drpedia.splash.activity.DoctorSGuideSplashScreen"
+            android:name=".splash.activity.DoctorSGuideSplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +45,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".profile.activity.Profile" />
+        <activity android:name=".DoctorGuideBaseActivity" />
+        <activity android:name=".profile.activity.EditProfile" />
+        <activity
+            android:name=".home.activity.PinchZoomImagePreview"
+            android:theme="@style/AppTheme.ActionBar.Transparent"></activity>
+        <activity
+            android:name=".home.activity.MultiPhotoSelectActivity"
+            android:theme="@style/SelectDataTheme" />
+        <activity android:name=".home.activity.ViewVideoItem"></activity>
     </application>
 
 </manifest>

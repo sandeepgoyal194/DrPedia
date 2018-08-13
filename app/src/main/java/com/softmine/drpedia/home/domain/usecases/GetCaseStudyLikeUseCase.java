@@ -2,6 +2,7 @@ package com.softmine.drpedia.home.domain.usecases;
 
 import android.util.Log;
 
+
 import com.softmine.drpedia.home.domain.repositry.ICaseStudyRepository;
 
 import javax.inject.Inject;
@@ -17,7 +18,6 @@ public class GetCaseStudyLikeUseCase  extends UseCase<String> {
     public static final String like_Status = "status";
     public static final String postID = "post_id";
     private final ICaseStudyRepository getCaseRepo;
-
 
     @Inject
     GetCaseStudyLikeUseCase(ICaseStudyRepository getCaseRepo)

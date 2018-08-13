@@ -1,8 +1,14 @@
 package com.softmine.drpedia.home;
 
-public interface CaseUploadView {
+import java.util.List;
+
+import frameworks.basemvp.IView;
+
+public interface CaseUploadView extends IView{
 
     void selectImageFromStorage();
+
+    void selectVideoFromStorage();
 
     void setUploadResult(String result);
 
@@ -10,7 +16,7 @@ public interface CaseUploadView {
 
     String getCaseType();
 
-    byte[] getImageBytes();
+    List<String> getDataUri();
 
     String getImageType();
 }

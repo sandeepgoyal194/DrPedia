@@ -3,6 +3,7 @@ package com.softmine.drpedia;
 import android.content.Intent;
 import android.util.Log;
 
+
 import com.softmine.drpedia.login.model.User;
 import com.softmine.drpedia.login.view.SocialLoginActivity;
 
@@ -52,7 +53,7 @@ public class CaseStudyAppApplication extends AppBaseApplication {
         mUserInfo = userInfo;
     }
 
-    public static User getUser() {
+    public User getUser() {
         return mUserInfo;
     }
 }

@@ -8,19 +8,19 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+
 import com.softmine.drpedia.CaseStudyAppApplication;
-import com.sachin.doctorsguide.R;
+import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.activity.DashBoardActivity;
+import com.softmine.drpedia.login.model.User;
 import com.softmine.drpedia.login.view.SocialLoginActivity;
 import com.softmine.drpedia.splash.di.DaggerSplashComponent;
 import com.softmine.drpedia.splash.di.SplashComponent;
-
-import javax.inject.Inject;
+import com.softmine.drpedia.utils.UserManager;
 
 import frameworks.AppBaseApplication;
 import frameworks.appsession.AppSessionManager;
 import frameworks.appsession.SessionValue;
-import frameworks.appsession.UserInfo;
 
 public class DoctorSGuideSplashScreen extends AppCompatActivity {
 
@@ -28,11 +28,11 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
     private static final int START_LOGIN = 2;
     public static int SPLASH_TIME_OUT = 3000;
 
-    @Inject
-    AppSessionManager appSessionManager;
 
+    AppSessionManager appSessionManager;
+    UserManager userManager;
     SplashComponent splashComponent;
-    UserInfo userInfo;
+    User userInfo;
 
     H mHandler = new H();
 
@@ -42,8 +42,10 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_doctors_guide_splash);
         this.initInjector();
 
-        SessionValue sessionValue = appSessionManager.getSession();
+        appSessionManager = new AppSessionManager(this);
 
+        SessionValue sessionValue = appSessionManager.getSession();
+        userManager = new UserManager(this);
         if(sessionValue!=null)
             Log.d("loginresponse","session value===="+sessionValue.getApi_key());
         else
@@ -52,9 +54,10 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
         if(sessionValue == null ) {
             mHandler.sendEmptyMessageDelayed(START_LOGIN,SPLASH_TIME_OUT);
         } else {
-            //userInfo = sessionValue.getUserInfo();
+            userInfo = userManager.getUser();
             mHandler.sendEmptyMessageDelayed(START_DASHBOARD,SPLASH_TIME_OUT);
             CaseStudyAppApplication.getParentApplication().setAuthId(sessionValue);
+            CaseStudyAppApplication.getParentApplication().setUser(userInfo);
         }
 
     }

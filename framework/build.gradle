@@ -4,10 +4,9 @@ apply from: "$rootProject.projectDir/buildconfig/module.gradle"
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.supportLibDependencies.appCompactV7
     implementation rootProject.ext.miscDependencies.joda
-
     compile rootProject.ext.butterKnifeDependencies.butterKnife
     compile rootProject.ext.supportLibDependencies.design
     compile rootProject.ext.supportLibDependencies.supportV4
@@ -27,4 +26,5 @@ dependencies {
 
 android {
     buildToolsVersion '27.0.3'
+    compileSdkVersion 26
 }
