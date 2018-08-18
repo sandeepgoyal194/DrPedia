@@ -1,4 +1,4 @@
-package com.sachin.doctorsguide.home.presentor;
+package com.softmine.drpedia.home.presentor;
 
 public interface IMyPostListPresentor {
 

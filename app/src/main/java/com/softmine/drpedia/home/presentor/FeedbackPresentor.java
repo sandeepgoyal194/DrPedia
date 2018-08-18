@@ -45,15 +45,15 @@ public class FeedbackPresentor implements IFeedbackPresentor {
             @Override
             public void onError(Throwable e) {
                 Log.d("feedbacklog","onerror called==");
-                 FeedbackPresentor.this.iFeedbackView.hideProgress();
-               // EditProfilePresenter.this.editProfileView.setProfileUpdateFailed();
+                FeedbackPresentor.this.iFeedbackView.hideProgress();
+                // EditProfilePresenter.this.editProfileView.setProfileUpdateFailed();
                 e.printStackTrace();
             }
 
             @Override
             public void onNext(String string) {
                 Log.d("feedbacklog","onNext called==");
-               // EditProfilePresenter.this.editProfileView.setProfileUpatedSuccessfully();
+                // EditProfilePresenter.this.editProfileView.setProfileUpatedSuccessfully();
 
                 FeedbackPresentor.this.iFeedbackView.showToast(string);
                 FeedbackPresentor.this.iFeedbackView.setEmptyView();

@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import frameworks.network.usecases.RequestParams;
 import rx.Subscriber;
 
-public class MyPostListPresentor implements com.sachin.doctorsguide.home.presentor.IMyPostListPresentor {
+public class MyPostListPresentor implements IMyPostListPresentor{
 
     private CaseListView viewListView;
     private GetMyCaseStudyListUseCase getMyCaseStudyListUseCase;

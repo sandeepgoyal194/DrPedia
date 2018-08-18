@@ -61,7 +61,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
     @Override
     public void doLikeorUnlikePost(String likeStatus, int postID) {
         Log.d("ItemDetail","image liked in presentor view");
-     //   Toast.makeText(this.caseDetailView.getContext(),"image liked in presentor view",Toast.LENGTH_LONG).show();
+        //   Toast.makeText(this.caseDetailView.getContext(),"image liked in presentor view",Toast.LENGTH_LONG).show();
         RequestParams requestParams =  GetCaseStudyLikeUseCase.createRequestParams(likeStatus,postID);
         CaseDetailPresentor.this.showViewLoading();
         this.getCaseStudyLikeUseCase.execute(requestParams,new Subscriber<String>() {
@@ -75,11 +75,11 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
             @Override
             public void onError(Throwable e) {
                 Log.d("ItemDetail","error occured while like image");
-            //    CaseDetailPresentor.this.caseDetailView.updateLikeOrUnlikePost(true);
-             //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                    CaseDetailPresentor.this.hideViewLoading();
-                    CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while liking Post");
+                //    CaseDetailPresentor.this.caseDetailView.updateLikeOrUnlikePost(true);
+                //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+                CaseDetailPresentor.this.hideViewLoading();
+                CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while liking Post");
             }
 
             @Override

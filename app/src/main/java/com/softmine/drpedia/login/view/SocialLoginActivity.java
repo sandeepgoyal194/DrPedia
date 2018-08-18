@@ -1,8 +1,10 @@
 package com.softmine.drpedia.login.view;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 
 import com.softmine.drpedia.CaseStudyAppApplication;
@@ -33,12 +35,16 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
     AppSessionManager appSessionManager;
     SocialLoginComponent socialLoginComponent;
 
+    @BindView(R.id.fbLoginContainer)
+    RelativeLayout parentLayout;
+
     @BindView(R.id.fblogin)
     FrameLayout loginFbButton;
 
     int FACEBOOK_LOGIN_REQUEST_CODE = 21;
     int FACEBOOK_LOGIN_RESPONSE_OK = 22;
     int FACEBOOK_LOGIN_RESPONSE_FAILS = 23;
+    int FACEBOOK_INTERNET_LOGIN_RESPONSE_FAILS = 24;
 
     UserManager userManager;
 
@@ -47,7 +53,7 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
     @Override
     protected void initInjector() {
         socialLoginComponent = DaggerSocialLoginComponent.builder().baseAppComponent(((AppBaseApplication)getApplication())
-                        .getBaseAppComponent()).build();
+                .getBaseAppComponent()).build();
         socialLoginComponent.inject(this);
         if(appSessionManager!=null)
         {
@@ -83,7 +89,7 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
         startActivityForResult(new Intent(this, FacebookLoginActivity.class), FACEBOOK_LOGIN_REQUEST_CODE);
     }
 
-   // UserInfo userInfo;
+    // UserInfo userInfo;
     String token;
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -91,18 +97,24 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
             if (resultCode == FACEBOOK_LOGIN_RESPONSE_OK) {
                 if (data != null)
                 {
-                        token = (String) data.getExtras().get("authToken");
-                        Log.d("loginresponse","fbtoken===="+token);
-                        socialLoginPresentor.getAuthID(token);
+                    token = (String) data.getExtras().get("authToken");
+                    Log.d("loginresponse","fbtoken===="+token);
+                    socialLoginPresentor.getAuthID(token);
                 }
                 else
                 {
                     Log.d("loginresponse","data is null");
                 }
             }
-            else
+            else if(resultCode == FACEBOOK_LOGIN_RESPONSE_FAILS)
             {
                 Log.d("loginresponse","failed");
+                showSnackBar("Error occured while login with facebook");
+            }
+            else if(resultCode == FACEBOOK_INTERNET_LOGIN_RESPONSE_FAILS)
+            {
+                Log.d("loginresponse","Internet not working");
+                showSnackBar("Internet not working");
             }
         }
     }
@@ -122,6 +134,14 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
         }
     }
 
+    public void showSnackBar(String message) {
+
+        Snackbar snackbar = Snackbar
+                .make(parentLayout, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+
     @Override
     public void setLoginResponse(LoginResponse loginResponse) {
         SessionValue sessionValue = new SessionValue();
@@ -140,7 +160,7 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
     @Override
     public void startActivity() {
         Intent dashBoardIntent = new Intent(this, DashBoardActivity.class);
-     //   dashBoardIntent.putExtra("user",CaseStudyAppApplication.getParentApplication().getUser());
+        //   dashBoardIntent.putExtra("user",CaseStudyAppApplication.getParentApplication().getUser());
         startActivity(dashBoardIntent);
         finish();
     }

@@ -65,7 +65,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseVi
 
     @Override
     public void onBindViewHolder(CaseListAdapter.CaseViewHolder holder, int position) {
-       final CaseItem caseItem = this.caseCollection.get(position);
+        final CaseItem caseItem = this.caseCollection.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (CaseListAdapter.this.onItemClickListener != null) {
@@ -104,16 +104,16 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseVi
     @Override
     public int getItemCount() {
         return (this.caseCollection != null) ? this.caseCollection.size() : 0;
-       // return 20;
+        // return 20;
     }
 
-   static class CaseViewHolder extends RecyclerView.ViewHolder {
+    static class CaseViewHolder extends RecyclerView.ViewHolder {
 
        /* @BindView(R.id.casePic)
         ImageView pic;*/
 
-       @BindView(R.id.horizontal_recycler_view)
-       CaseMediaItemHorizontalRecyclerView rc_view;
+        @BindView(R.id.horizontal_recycler_view)
+        CaseMediaItemHorizontalRecyclerView rc_view;
 
         @BindView(R.id.desc)
         TextView desc;
@@ -131,7 +131,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseVi
 
         View mView;
 
-       MediaItemListAdapter mediaItemListAdapter ;
+        MediaItemListAdapter mediaItemListAdapter ;
 
 
         CaseViewHolder(View itemView) {
@@ -201,7 +201,7 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseVi
 */
             if(caseItem.getPostLikeStatus().equals("true"))
                 img_like.setImageDrawable(mView.getContext().getResources().getDrawable(R.drawable.like_checked));
-             else
+            else
                 img_like.setImageDrawable(mView.getContext().getResources().getDrawable(R.drawable.like));
 
             if(caseItem.getPostBookmarkStatus().equals("true"))

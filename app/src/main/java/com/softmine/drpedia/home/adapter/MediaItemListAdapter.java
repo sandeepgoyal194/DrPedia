@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.halilibo.bettervideoplayer.BetterVideoPlayer;
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.activity.PinchZoomImagePreview;
 import com.softmine.drpedia.home.activity.ViewVideoItem;
@@ -61,57 +62,57 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
 
     @Override
     public MediaItemListAdapter.CategoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        Log.d("mediaholder","onCreateViewHolder");
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.case_mediaitem, null);
         return new CategoryHolder(v);
     }
 
-    private class ProgressBack extends AsyncTask<String, String, Boolean> {
 
-        @Override
-        protected Boolean doInBackground(String... arg0) {
-            Log.d("downloadVideo","downloading");
-            downloadFile("http://122.160.30.50:8080//DrPedia_Images/image_1532685708960_20180723_162209.mp4","Sample1.mp4");
+    @Override
+    public void onViewAttachedToWindow(CategoryHolder holder) {
+        Log.d("mediaholder","onViewAttachedToWindow");
+        super.onViewAttachedToWindow(holder);
+      /*  holder.bvp.reset();
+        holder.bvp.release();*/
+    }
 
-            return true;
-        }
-        protected void onPostExecute(Boolean result) {
-            Log.d("downloadVideo","download complete");
-        }
+    @Override
+    public void onViewDetachedFromWindow(CategoryHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        Log.d("mediaholder","onViewDetachedFromWindow");
+        Log.d("viewdetach","detached=="+holder.getAdapterPosition());
+
+    /*    holder.bvp.reset();
+        holder.bvp.release();*/
 
     }
 
-    private void downloadFile(String fileURL, String fileName) {
-        Log.d("downloadVideo","download method called");
-        try {
-            String rootDir = Environment.getExternalStorageDirectory()
-                    + File.separator + "Video";
-            File rootFile = new File(rootDir);
-            rootFile.mkdir();
-            URL url = new URL(fileURL);
-            HttpURLConnection c = (HttpURLConnection) url.openConnection();
-            c.setRequestMethod("GET");
-            c.setDoOutput(true);
-            c.connect();
-            FileOutputStream f = new FileOutputStream(new File(rootFile,
-                    fileName));
-            InputStream in = c.getInputStream();
-            byte[] buffer = new byte[1024];
-            int len1 = 0;
-            int count=0;
-            while ((len1 = in.read(buffer)) > 0 && count<10) {
-                Log.d("downloadVideo","inside if");
-                f.write(buffer, 0, len1);
-                count++;
-            }
-            f.close();
-        } catch (IOException e) {
-            Log.d("downloadVideo", e.toString());
-        }
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+
+        super.onAttachedToRecyclerView(recyclerView);
+        Log.d("mediaholder","onAttachedToRecyclerView");
+        //notifyDataSetChanged();
     }
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        Log.d("mediaholder","onDetachedFromRecyclerView");
+    }
+
+    @Override
+    public void onViewRecycled(CategoryHolder holder) {
+        super.onViewRecycled(holder);
+        Log.d("mediaholder","onViewRecycled");
+        //notifyDataSetChanged();
+    }
 
     @Override
     public void onBindViewHolder(MediaItemListAdapter.CategoryHolder holder, int position) {
+        Log.d("mediaholder","onBindViewHolder");
         final CaseMediaItem caseMediaItem = mediaItemList.get(position);
         holder.setContent(caseMediaItem);
         Log.d("downloadVideo", "position=="+position);
@@ -181,7 +182,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
     class CategoryHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.case_image)
-         ImageView mediaImage;
+        ImageView mediaImage;
 
         @BindView(R.id.img_loading)
         ImageView img_loading;
@@ -194,13 +195,12 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         @BindView(R.id.case_playIcon)
         ImageView casePlayIcon;
 
-        @BindView(R.id.case_video)
-         VideoView mVideoView;
+        @BindView(R.id.bvp)
+        BetterVideoPlayer bvp;
 
         @BindView(R.id.videoContainer)
         RelativeLayout videoContainer;
 
-        MediaController mediaController;
         Glide glide;
         View mView;
 
@@ -208,8 +208,8 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
             super(itemView);
             ButterKnife.bind(this,itemView);
             mView = itemView;
-            mediaController= new MediaController(itemView.getContext());
-            mediaController.setAnchorView(mVideoView);
+            bvp.disableControls();
+
         }
 
         public void setContent(CaseMediaItem caseMediaItem) {
@@ -244,6 +244,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                             })
                             .into(mediaImage);
                     mediaImage.setVisibility(View.VISIBLE);
+                    videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
                 }
@@ -269,6 +270,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                             })
                             .into(mediaImage);
                     mediaImage.setVisibility(View.VISIBLE);
+                    videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
                 }
@@ -280,83 +282,46 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
             {
                 Log.d("hrview","video available");
                 Log.d("hrview","video src===="+caseMediaItem.getSrc());
-            /*    mediaImage.setVisibility(View.GONE);
-                img_loading.setVisibility(View.GONE);
-                mVideoView.setVisibility(View.VISIBLE);
-                videoContainer.setVisibility(View.VISIBLE);
-                mVideoView.setMediaController(mediaController);
-                mVideoView.setVideoURI(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));*/
-              //  mVideoView.requestFocus();
-             //   mVideoView.seekTo(1000);
-                //   videoView.start();
-
+                bvp.reset();
+                //bvp.release();
                 if(caseMediaItem.getSrc()!=null)
                 {
-                    glide.with(mView.getContext())
+                    /*glide.with(mView.getContext())
                             .load(caseMediaItem.getVideo())
                             .centerCrop()
                             .crossFade()
                             .into(thumbview);
 
-                   /* Bitmap bmThumbnail = createThumbnailFromPath(caseMediaItem.getVideo(), MediaStore.Video.Thumbnails.MINI_KIND);
-                    thumbview.setImageBitmap(bmThumbnail);*/
+                   *//* Bitmap bmThumbnail = createThumbnailFromPath(caseMediaItem.getVideo(), MediaStore.Video.Thumbnails.MINI_KIND);
+                    thumbview.setImageBitmap(bmThumbnail);*//*
                     thumbview.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
+                    mediaImage.setVisibility(View.GONE);*/
+
+                    bvp.setAutoPlay(false);
+                    bvp.setSource( Uri.fromFile(new File(caseMediaItem.getVideo())));
+                    videoContainer.setVisibility(View.VISIBLE);
+                    casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
+                    bvp.start();
+                    bvp.pause();
                 }
                 else
                 {
-                    ThumbnailDownloader.download(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()).toString(),thumbview , this.getAdapterPosition());
+                   /* ThumbnailDownloader.download(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()).toString(),thumbview , this.getAdapterPosition());
                     thumbview.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
+                    mediaImage.setVisibility(View.GONE);*/
+                    bvp.setAutoPlay(false);
+                    bvp.setSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
+                    videoContainer.setVisibility(View.VISIBLE);
+                    casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
-                }
-             }
-        }
-
-        public Bitmap createThumbnailFromPath(String filePath, int type){
-            return ThumbnailUtils.createVideoThumbnail(filePath, type);
-        }
-
-        public Bitmap retriveVideoFrameFromVideo(String videoPath) throws Throwable
-        {
-            Log.d("downloadVideo","inside retriveVideoFrameFromVideo");
-            Bitmap bitmap = null;
-            MediaMetadataRetriever mediaMetadataRetriever = null;
-            Uri uri = Uri.parse(videoPath);
-            try
-            {
-                mediaMetadataRetriever = new MediaMetadataRetriever();
-                Log.d("downloadVideo","inside retriveVideoFrameFromVideo object");
-                if (Build.VERSION.SDK_INT >= 14) {
-                    Log.d("downloadVideo","data source created");
-                    mediaMetadataRetriever.setDataSource(uri.toString(), new HashMap<String, String>());
-                    Log.d("downloadVideo","data source created1");
-                }
-                else {
-                    Log.d("downloadVideo","data source created2");
-                    mediaMetadataRetriever.setDataSource(uri.toString());
-                    Log.d("downloadVideo","data source created3");
-                }
-                //   mediaMetadataRetriever.setDataSource(videoPath);
-
-                bitmap = mediaMetadataRetriever.getFrameAtTime(2000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-                Log.d("downloadVideo","bitmap created");
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new Throwable("Exception in retriveVideoFrameFromVideo(String videoPath)" + e.getMessage());
-
-            } finally {
-                if (mediaMetadataRetriever != null) {
-                    mediaMetadataRetriever.release();
+                    bvp.start();
+                    bvp.pause();
                 }
             }
-            return bitmap;
         }
-
-        }
-
-
-
     }
+}
 

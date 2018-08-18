@@ -28,6 +28,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
     int FACEBOOK_LOGIN_REQUEST_CODE = 21;
     int FACEBOOK_LOGIN_RESPONSE_OK = 22;
     int FACEBOOK_LOGIN_RESPONSE_FAILS = 23;
+    int FACEBOOK_INTERNET_LOGIN_RESPONSE_FAILS = 24;
 
 
     private CallbackManager callbackManager;
@@ -74,7 +75,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Log.d("loginresponse","else part");
+                    Log.d("loginresponse","unable to get token");
                     setResult(FACEBOOK_LOGIN_RESPONSE_FAILS);
                 }
 
@@ -82,7 +83,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Log.d("loginresponse","called fail");
+                Log.d("loginresponse","called onCancel..");
                 setResult(FACEBOOK_LOGIN_RESPONSE_FAILS);
                 finish();
             }
@@ -92,8 +93,15 @@ public class FacebookLoginActivity extends AppCompatActivity {
                 Log.d("loginresponse","called onError");
                 Log.d("loginresponse",e.getMessage());
                 Log.d("loginresponse",e.toString());
-               // Log.d("loginresponse",e.);
+                // Log.d("loginresponse",e.);
                 e.printStackTrace();
+
+                if(e.getMessage().contains("CONNECTION_FAILURE"))
+                {
+                    Log.d("loginresponse","internet issues");
+                    setResult(FACEBOOK_INTERNET_LOGIN_RESPONSE_FAILS);
+                    finish();
+                }
             }
         };
 
@@ -127,7 +135,7 @@ public class FacebookLoginActivity extends AppCompatActivity {
                                 Log.d("profile","photo url=="+profile.getProfilePictureUri(100,100).toString());
                                 Log.d("profile","email=="+object.getString("email"));
                                 Log.d("profile","name=="+object.getString("name"));
-                             //   Log.d("profile","gender=="+object.getString("gender"));
+                                //   Log.d("profile","gender=="+object.getString("gender"));
                                 Log.d("profile","dob=="+object.getString("birthday"));
 
                                 Log.d("profile",object.toString());
@@ -183,3 +191,4 @@ public class FacebookLoginActivity extends AppCompatActivity {
 
 
 }
+

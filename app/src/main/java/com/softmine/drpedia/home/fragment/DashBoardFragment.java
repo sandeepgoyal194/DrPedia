@@ -74,6 +74,7 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d("loginresponse","onCreate called");
         super.onCreate(savedInstanceState);
         this.getComponent(CaseStudyComponent.class).inject(this);
     }
@@ -146,6 +147,16 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
 
         super.onStop();
         Log.d("loginresponse","onStop fragment");
+        // caseListAdapter=null;
+        // caseListPresentor=null;
+        //this.caseListAdapter.setUsersCollection(null);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("loginresponse","onDestroy called");
+        super.onDestroy();
+        this.rv_users.setAdapter(null);
     }
 
     @Override

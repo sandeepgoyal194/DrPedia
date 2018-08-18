@@ -4,17 +4,20 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.JsonSyntaxException;
 import com.softmine.drpedia.home.CaseListView;
 import com.softmine.drpedia.home.domain.usecases.GetBookmarkListUseCase;
 import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import frameworks.network.usecases.RequestParams;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class BookMarkListPresentor implements com.sachin.doctorsguide.home.presentor.IBookmarkListPresentor {
@@ -62,6 +65,30 @@ public class BookMarkListPresentor implements com.sachin.doctorsguide.home.prese
                 BookMarkListPresentor.this.hideViewLoading();
                 BookMarkListPresentor.this.showViewRetry();
                 e.printStackTrace();
+
+                if(e instanceof IOException)
+                {
+                    Log.d("bookmarkresponse","Internet not working");
+                    viewListView.showSnackBar("Internet not working");
+                }
+                else
+                {
+                    Log.d("bookmarkresponse","exception code  ");
+                    if(e instanceof JsonSyntaxException)
+                    {
+                        Log.d("bookmarkresponse", "Json Parsing exception");
+                        viewListView.showSnackBar("Json Parsing exception");
+                    }
+                    else if(e instanceof HttpException)
+                    {
+                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                        viewListView.showSnackBar("server issues");
+                    }
+                    else {
+                        Log.d("bookmarkresponse", "other issues");
+                        viewListView.showSnackBar("issues occured while getting bookmarks list");
+                    }
+                }
             }
 
             @Override

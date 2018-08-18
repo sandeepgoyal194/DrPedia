@@ -76,10 +76,10 @@ public class CommentsOnPostListAdapter extends RecyclerView.Adapter<CommentsOnPo
 
     @Override
     public int getItemCount() {
-       return this.commentsCollection.size();
+        return this.commentsCollection.size();
     }
 
-     class CommentsOnPostViewHolder extends RecyclerView.ViewHolder {
+    class CommentsOnPostViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.commented_user_photo)
         ImageView commented_user_photo;

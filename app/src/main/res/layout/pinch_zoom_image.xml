@@ -5,7 +5,7 @@
     android:background="@color/black"
     android:layout_height="match_parent">
 
-    <com.sachin.doctorsguide.home.activity.TouchImageView
+    <com.softmine.drpedia.home.activity.TouchImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"

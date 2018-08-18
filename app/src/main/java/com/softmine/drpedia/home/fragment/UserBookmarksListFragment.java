@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +55,8 @@ public class UserBookmarksListFragment extends Fragment implements CaseListView 
     RelativeLayout rl_retry;
     @BindView(R.id.bt_retry)
     Button bt_retry;
+    @BindView(R.id.bookmarkListContainer)
+    FrameLayout parentLayout;
 
     @BindView(R.id.nodata_tv)
     TextView emptyTv;
@@ -228,6 +231,9 @@ public class UserBookmarksListFragment extends Fragment implements CaseListView 
     @Override
     public void showSnackBar(String message) {
 
+        Snackbar snackbar = Snackbar
+                .make(parentLayout, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     @Override

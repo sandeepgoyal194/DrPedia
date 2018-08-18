@@ -33,7 +33,7 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
     @Override
     public void selectCaseImage() {
         Log.d("uploadimage","clicked selectCaseImage presentor");
-     this.caseUploadView.selectImageFromStorage();
+        this.caseUploadView.selectImageFromStorage();
     }
 
     @Override
