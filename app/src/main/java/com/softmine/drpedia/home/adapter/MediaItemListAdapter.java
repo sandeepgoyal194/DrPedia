@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,10 +17,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
+import com.google.android.exoplayer2.util.Util;
 import com.halilibo.bettervideoplayer.BetterVideoPlayer;
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.activity.PinchZoomImagePreview;
@@ -28,7 +54,6 @@ import com.softmine.drpedia.home.model.CaseMediaItem;
 import com.softmine.drpedia.home.net.CaseStudyAPIURL;
 import com.softmine.drpedia.utils.ScaleBitmapTransformation;
 import com.softmine.drpedia.utils.ThumbnailDownloader;
-
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -179,7 +204,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
     }
 
 
-    class CategoryHolder extends RecyclerView.ViewHolder {
+    class CategoryHolder extends RecyclerView.ViewHolder implements Player.EventListener {
 
         @BindView(R.id.case_image)
         ImageView mediaImage;
@@ -195,11 +220,23 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         @BindView(R.id.case_playIcon)
         ImageView casePlayIcon;
 
-        @BindView(R.id.bvp)
-        BetterVideoPlayer bvp;
+        @BindView(R.id.player_view)
+        PlayerView mPlayerView;
+
+        private SimpleExoPlayer player;
+        private DefaultTrackSelector trackSelector;
+        private boolean shouldAutoPlay;
+        private BandwidthMeter bandwidthMeter;
+
+        private boolean playWhenReady;
+        private int currentWindow;
+        private long playbackPosition;
 
         @BindView(R.id.videoContainer)
         RelativeLayout videoContainer;
+
+        @BindView(R.id.progress_bar)
+        ProgressBar bar;
 
         Glide glide;
         View mView;
@@ -208,9 +245,16 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
             super(itemView);
             ButterKnife.bind(this,itemView);
             mView = itemView;
-            bvp.disableControls();
-
+            player = null;
+            playWhenReady = true;
+            currentWindow = 0;
+            playbackPosition = 0;
+            shouldAutoPlay = false;
+            bandwidthMeter = new DefaultBandwidthMeter();
+            initializePlayer();
+            bar.setVisibility(View.VISIBLE);
         }
+
 
         public void setContent(CaseMediaItem caseMediaItem) {
 
@@ -224,6 +268,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
 
                 if(caseMediaItem.getSrc()!=null)
                 {
+                    Log.d("hrview","image source "+caseMediaItem.getSrc());
                     glide.with(mView.getContext())
                             .load("file://"+caseMediaItem.getImage())
                             .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
@@ -247,9 +292,11 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
+                    bar.setVisibility(View.GONE);
                 }
                 else
                 {
+                    Log.d("hrview","image source "+caseMediaItem.getSrc());
                     glide.with(mView.getContext())
                             .load(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getImage())
                             .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
@@ -273,6 +320,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
+                    bar.setVisibility(View.GONE);
                 }
 
                 //scaleImage(mediaImage);
@@ -282,10 +330,11 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
             {
                 Log.d("hrview","video available");
                 Log.d("hrview","video src===="+caseMediaItem.getSrc());
-                bvp.reset();
+           //     bvp.reset();
                 //bvp.release();
                 if(caseMediaItem.getSrc()!=null)
                 {
+                    Log.d("hrview","video source "+caseMediaItem.getSrc());
                     /*glide.with(mView.getContext())
                             .load(caseMediaItem.getVideo())
                             .centerCrop()
@@ -298,29 +347,138 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);*/
 
-                    bvp.setAutoPlay(false);
-                    bvp.setSource( Uri.fromFile(new File(caseMediaItem.getVideo())));
+                  //  bvp.setAutoPlay(false);
+                  //  bvp.setSource( Uri.fromFile(new File(caseMediaItem.getVideo())));
+                    Log.d("hrview","file video source "+Uri.fromFile(new File(caseMediaItem.getVideo())).toString());
+                    MediaSource mediaSource = buildFileMediaSource(Uri.fromFile(new File(caseMediaItem.getVideo())));
+                    preparePlayer(mediaSource);
+
                     videoContainer.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
-                    bvp.start();
-                    bvp.pause();
+                  //  bvp.start();
+                   // bvp.pause();
                 }
                 else
                 {
+                    Log.d("hrview","video source "+caseMediaItem.getSrc());
                    /* ThumbnailDownloader.download(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()).toString(),thumbview , this.getAdapterPosition());
                     thumbview.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);*/
-                    bvp.setAutoPlay(false);
-                    bvp.setSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
+                  //  bvp.setAutoPlay(false);
+                  //  bvp.setSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
+
+                    MediaSource mediaSource = buildMediaSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
+                    preparePlayer(mediaSource);
                     videoContainer.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
-                    bvp.start();
-                    bvp.pause();
+                  //  bvp.start();
+                   // bvp.pause();
                 }
             }
+        }
+
+        private void initializePlayer() {
+            mPlayerView.requestFocus();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+
+            trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+            player = ExoPlayerFactory.newSimpleInstance(mView.getContext(), trackSelector);
+
+            mPlayerView.setPlayer(player);
+
+            player.setPlayWhenReady(shouldAutoPlay);
+
+          player.addListener(this);
+
+        }
+
+        private  void preparePlayer(MediaSource mediaSource)
+        {
+            boolean haveStartPosition = currentWindow != C.INDEX_UNSET;
+            if (haveStartPosition) {
+                player.seekTo(currentWindow, playbackPosition);
+            }
+
+            player.prepare(mediaSource, !haveStartPosition, false);
+        }
+
+        private MediaSource buildMediaSource(Uri uri) {
+            return new ExtractorMediaSource.Factory(
+                    new DefaultHttpDataSourceFactory("exoplayer-codelab")).
+                    createMediaSource(uri);
+        }
+
+        private MediaSource buildFileMediaSource(Uri uri) {
+            return new ExtractorMediaSource.Factory(
+                    new DefaultDataSourceFactory(mView.getContext(), Util.getUserAgent(mView.getContext(), "mediaPlayerSample"),(TransferListener<? super DataSource>) bandwidthMeter)).
+                    createMediaSource(uri);
+        }
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+            Log.d("bufferupdate" , "onTimelineChanged "+reason);
+            if(reason>0)
+                bar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+        }
+
+        @Override
+        public void onLoadingChanged(boolean isLoading) {
+            Log.d("bufferupdate" , "loading changed "+isLoading);
+        }
+
+        @Override
+        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            if (playbackState == Player.STATE_BUFFERING){
+                bar.setVisibility(View.VISIBLE);
+                Log.d("bufferupdate" , "position  "+player.getBufferedPosition());
+                Log.d("bufferupdate" , "percentage  "+player.getBufferedPercentage());
+            } else {
+                Log.d("bufferupdate" , "state  else "+playbackState);
+                Log.d("bufferupdate" , "position  else "+player.getBufferedPosition());
+                Log.d("bufferupdate" , "percentage  else "+player.getBufferedPercentage());
+               // bar.setVisibility(View.INVISIBLE);
+            }
+        }
+
+
+        @Override
+        public void onRepeatModeChanged(int repeatMode) {
+
+        }
+
+        @Override
+        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException error) {
+
+        }
+
+        @Override
+        public void onPositionDiscontinuity(int reason) {
+
+        }
+
+        @Override
+        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+        }
+
+        @Override
+        public void onSeekProcessed() {
+            Log.d("bufferupdate", "onSeekProcessed");
         }
     }
 }

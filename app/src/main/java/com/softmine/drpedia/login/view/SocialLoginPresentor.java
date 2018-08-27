@@ -45,7 +45,18 @@ public class SocialLoginPresentor extends AppBasePresenter<ILoginViewContractor.
                 e.printStackTrace();
                 if(e instanceof IOException)
                 {
+
                     Log.d("loginresponse","Internet not working");
+                    if(e instanceof HttpException)
+                    {
+                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                    }
+                    else
+                    {
+                        e.printStackTrace();
+                        Log.d("loginresponse","other issues");
+                    }
+                   // Log.d("loginresponse","exception code  "+((HttpException)e).code());
                     getView().showSnackBar("Internet not working");
                 }
                 else

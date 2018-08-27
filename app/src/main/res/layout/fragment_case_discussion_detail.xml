@@ -15,14 +15,14 @@
         android:layout_height="230dp"
         android:layout_below="@+id/toolbar">
 
-        <com.sachin.doctorsguide.home.customview.CaseMediaItemHorizontalRecyclerView
+        <com.softmine.drpedia.home.customview.CaseMediaItemHorizontalRecyclerView
             android:id="@+id/horizontal_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:scrollbars="horizontal"
             android:scrollbarSize="2dp">
-        </com.sachin.doctorsguide.home.customview.CaseMediaItemHorizontalRecyclerView>
+        </com.softmine.drpedia.home.customview.CaseMediaItemHorizontalRecyclerView>
 
     </FrameLayout>
 

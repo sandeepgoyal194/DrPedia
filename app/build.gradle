@@ -39,4 +39,5 @@ dependencies {
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'com.github.halilozercan:BetterVideoPlayer:1.2.alpha1'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.2'
 }

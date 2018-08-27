@@ -41,6 +41,8 @@ public class ResponseInterceptor<T> extends AppBaseInterceptor {
                 }
                 return createNewResponse(response,gson.toJson(dataResponse));
             }
+
+
             return response;
         } catch (Error e) {
             throw new UnknownHostException();
