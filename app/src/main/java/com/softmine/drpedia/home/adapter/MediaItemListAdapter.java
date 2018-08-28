@@ -446,10 +446,9 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                 Log.d("bufferupdate" , "state  else "+playbackState);
                 Log.d("bufferupdate" , "position  else "+player.getBufferedPosition());
                 Log.d("bufferupdate" , "percentage  else "+player.getBufferedPercentage());
-               // bar.setVisibility(View.INVISIBLE);
+                bar.setVisibility(View.INVISIBLE);
             }
         }
-
 
         @Override
         public void onRepeatModeChanged(int repeatMode) {
