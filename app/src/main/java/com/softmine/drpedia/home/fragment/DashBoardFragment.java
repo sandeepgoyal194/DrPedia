@@ -156,6 +156,8 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
     public void onDestroy() {
         Log.d("loginresponse","onDestroy called");
         super.onDestroy();
+        caseListAdapter=null;
+        caseListPresentor=null;
         this.rv_users.setAdapter(null);
     }
 

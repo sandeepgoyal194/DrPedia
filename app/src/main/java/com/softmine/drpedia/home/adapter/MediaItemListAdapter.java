@@ -133,6 +133,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         super.onViewRecycled(holder);
         Log.d("mediaholder","onViewRecycled");
         //notifyDataSetChanged();
+       // holder.player=null;
     }
 
     @Override
