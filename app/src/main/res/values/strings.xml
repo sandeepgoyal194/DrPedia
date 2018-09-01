@@ -33,4 +33,8 @@
     <string name="exception_message_http">Error occured. Try again.</string>
     <string name="exception_message_parsing">Error occured while parsing response.</string>
     <string name="exception_error">Error occured.</string>
+    <string name="casetype_error">%s cannot be blank</string>
+    <string name="casedesc_error">%s cannot be blank</string>
+    <string name="postType">Post Type</string>
+    <string name="postDesc">Post Description</string>
 </resources>

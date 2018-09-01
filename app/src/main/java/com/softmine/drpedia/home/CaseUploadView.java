@@ -19,4 +19,11 @@ public interface CaseUploadView extends IView{
     List<String> getDataUri();
 
     String getImageType();
+
+    void onCaseTypeEmpty();
+
+    void onCaseDescEmpty();
+
+    void onUriListEmpty();
+
 }

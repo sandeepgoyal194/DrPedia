@@ -53,6 +53,9 @@ public class ErrorResponseInterceptor implements Interceptor {
             } else {
                 if (responseError.hasBody()) {
                     //noinspection ConstantConditions
+                    Log.d("errorresponse",responseError.getMessage());
+                    //Log.d("errorresponse",responseError.getStatus());
+                    Log.d("errorresponse",responseError.getStatusCode());
                     Log.d("errorresponse","ErrorResponseInterceptor responseError has body");
                     response.body().close();
                     throw responseError.createException();

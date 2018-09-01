@@ -67,7 +67,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     UploadCasePresentor uploadCasePresentor;
 
     @BindView(R.id.rl_progress)
-    FrameLayout rl_progress;
+    RelativeLayout rl_progress;
 
     @BindView(R.id.postType)
     EditText caseType;
@@ -328,6 +328,24 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     public String getImageType()
     {
         return "1";
+    }
+
+    @Override
+    public void onCaseTypeEmpty() {
+        this.caseType.requestFocus();
+        this.caseType.setError(String.format(getString(R.string.casetype_error), getString(R.string.postType)));
+       // mTextInputLayoutUserName.setError(String.format(getString(R.string.username_error), getString(R.string.username)));
+    }
+
+    @Override
+    public void onCaseDescEmpty() {
+        this.caseDesc.requestFocus();
+        this.caseDesc.setError(String.format(getString(R.string.casedesc_error), getString(R.string.postDesc)));
+    }
+
+    @Override
+    public void onUriListEmpty() {
+        showSnackBar("Upload atleast 1 image or video");
     }
 
 
