@@ -38,7 +38,6 @@ public class GetTokenCloudDataSource {
                 return dataResponseResponse.body().getData();
             }
         });
-                //.doOnNext(saveSession());
 
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.CaseListView;
@@ -43,8 +42,6 @@ import frameworks.di.component.HasComponent;
 
 public class DashBoardFragment extends Fragment implements CaseListView, SwipeRefreshLayout.OnRefreshListener {
 
-
-
     public interface CaseListListener {
         void onCaseClicked(final CaseItem userModel);
     }
@@ -56,12 +53,15 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
     CaseListPresentor caseListPresentor;
 
     @BindView(R.id.list_case) RecyclerView rv_users;
-    @BindView(R.id.rl_progress) FrameLayout rl_progress;
+    @BindView(R.id.rl_progress) RelativeLayout rl_progress;
     @BindView(R.id.rl_retry) RelativeLayout rl_retry;
     @BindView(R.id.bt_retry) Button bt_retry;
 
     @BindView(R.id.nodata_tv)
     TextView emptyTv;
+
+    @BindView(R.id.list_container)
+    RelativeLayout container;
 
     @BindView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
@@ -289,7 +289,9 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
 
     @Override
     public void showSnackBar(String message) {
-
+        Snackbar snackbar = Snackbar
+                .make(container, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     @Override

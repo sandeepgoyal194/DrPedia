@@ -28,4 +28,9 @@
     </string-array>
     <string name="permission_rationale">"Storage permission is needed for fetching images from Gallery."</string>
     <string name="type_prompt">Choose Type</string>
+    <string name="exception_message_generic">There was an application error</string>
+    <string name="exception_message_no_connection">There is no internet connection</string>
+    <string name="exception_message_http">Error occured. Try again.</string>
+    <string name="exception_message_parsing">Error occured while parsing response.</string>
+    <string name="exception_error">Error occured.</string>
 </resources>

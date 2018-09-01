@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_progress"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,9 +9,10 @@
     <ProgressBar
         style="@style/AppTheme.ProgressBar"
         android:keepScreenOn="true"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:translationZ="2dp"
         android:indeterminateDrawable="@mipmap/progress_bar"
         />
 
-</FrameLayout>
+</RelativeLayout>

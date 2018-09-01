@@ -1,10 +1,15 @@
 package com.softmine.drpedia.getToken.data.interceptor;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.softmine.drpedia.CaseStudyAppApplication;
+import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 
 import java.io.IOException;
@@ -21,8 +26,27 @@ import okhttp3.ResponseBody;
  */
 public class GetTokenInterceptor extends AppBaseInterceptor {
     private static final int BYTE_COUNT = 2048;
+
+
+    private boolean isThereInternetConnection() {
+        boolean isConnected;
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) CaseStudyAppApplication.getParentApplication().getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = (networkInfo != null && networkInfo.isConnectedOrConnecting());
+
+        return isConnected;
+    }
+
     @Override
     protected Response getResponse(Chain chain, Request request) throws IOException {
+
+        if(!isThereInternetConnection())
+        {
+            throw new NetworkConnectionException();
+        }
+
         try {
 
             Log.d("loginresponse","url===="+  chain.request().url());

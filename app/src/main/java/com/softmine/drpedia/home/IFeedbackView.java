@@ -1,6 +1,8 @@
 package com.softmine.drpedia.home;
 
-public interface IFeedbackView {
+import frameworks.basemvp.IView;
+
+public interface IFeedbackView extends IView {
 
      String setResult(String result);
      public void showProgress();

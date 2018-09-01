@@ -1,14 +1,18 @@
 package com.softmine.drpedia.home.presentor;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.JsonSyntaxException;
+import com.softmine.drpedia.exception.DefaultErrorBundle;
+import com.softmine.drpedia.exception.ErrorBundle;
+import com.softmine.drpedia.exception.ErrorMessageFactory;
+import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.CaseListView;
 import com.softmine.drpedia.home.domain.usecases.GetBookmarkListUseCase;
 import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -16,6 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import frameworks.network.model.ResponseException;
 import frameworks.network.usecases.RequestParams;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
@@ -47,6 +52,11 @@ public class BookMarkListPresentor implements com.sachin.doctorsguide.home.prese
         this.loadBookmarkList();
     }
 
+    private void showErrorMessage(ErrorBundle errorBundle) {
+        String errorMessage = ErrorMessageFactory.create(viewListView.getContext(),
+                errorBundle.getException());
+        viewListView.showSnackBar(errorMessage);
+    }
 
     @Override
     public void loadBookmarkList() {
@@ -68,25 +78,41 @@ public class BookMarkListPresentor implements com.sachin.doctorsguide.home.prese
 
                 if(e instanceof IOException)
                 {
-                    Log.d("bookmarkresponse","Internet not working");
-                    viewListView.showSnackBar("Internet not working");
+                    if(e instanceof HttpException)
+                    {
+                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof ResponseException)
+                    {
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof NetworkConnectionException)
+                    {
+                        Log.d("loginresponse","other issues");
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
+                    }
+                    else
+                    {
+                        Log.d("loginresponse", "other issue");
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
                 }
                 else
                 {
-                    Log.d("bookmarkresponse","exception code  ");
-                    if(e instanceof JsonSyntaxException)
-                    {
-                        Log.d("bookmarkresponse", "Json Parsing exception");
-                        viewListView.showSnackBar("Json Parsing exception");
+                    if(e instanceof JSONException) {
+                        Log.d("loginresponse", "Json Parsing exception");
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                     else if(e instanceof HttpException)
                     {
-                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
-                        viewListView.showSnackBar("server issues");
+                        Log.d("loginresponse", "Http exception issue");
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
-                    else {
-                        Log.d("bookmarkresponse", "other issues");
-                        viewListView.showSnackBar("issues occured while getting bookmarks list");
+                    else
+                    {
+                        Log.d("loginresponse", "other issue");
+                        BookMarkListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                 }
             }

@@ -1,21 +1,28 @@
 package com.softmine.drpedia.home.presentor;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-
+import com.softmine.drpedia.exception.DefaultErrorBundle;
+import com.softmine.drpedia.exception.ErrorBundle;
+import com.softmine.drpedia.exception.ErrorMessageFactory;
+import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.CaseListView;
 import com.softmine.drpedia.home.di.PerActivity;
 import com.softmine.drpedia.home.domain.usecases.GetCaseStudyListUseCase;
 import com.softmine.drpedia.home.model.CaseItem;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import frameworks.network.model.ResponseException;
 import frameworks.network.usecases.RequestParams;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 @PerActivity
@@ -47,6 +54,12 @@ public class CaseListPresentor implements ICaseListPresenter {
     }
 
 
+    private void showErrorMessage(ErrorBundle errorBundle) {
+        String errorMessage = ErrorMessageFactory.create(viewListView.getContext(),
+                errorBundle.getException());
+        viewListView.showSnackBar(errorMessage);
+    }
+
     @Override
     public void loadCaseStudyList() {
 
@@ -55,7 +68,6 @@ public class CaseListPresentor implements ICaseListPresenter {
             public void onCompleted() {
                 Log.d("loginresponse","onCompleted");
                 CaseListPresentor.this.hideViewLoading();
-
             }
 
             @Override
@@ -64,6 +76,45 @@ public class CaseListPresentor implements ICaseListPresenter {
                 CaseListPresentor.this.hideViewLoading();
                 CaseListPresentor.this.showViewRetry();
                 e.printStackTrace();
+                if(e instanceof IOException)
+                {
+                    if(e instanceof HttpException)
+                    {
+                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof ResponseException)
+                    {
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof NetworkConnectionException)
+                    {
+                        Log.d("loginresponse","other issues");
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
+                    }
+                    else
+                    {
+                        Log.d("loginresponse", "other issue");
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                }
+                else
+                {
+                    if(e instanceof JSONException) {
+                        Log.d("loginresponse", "Json Parsing exception");
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof HttpException)
+                    {
+                        Log.d("loginresponse", "Http exception issue");
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else
+                    {
+                        Log.d("loginresponse", "other issue");
+                        CaseListPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                }
             }
 
             @Override

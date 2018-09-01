@@ -31,7 +31,6 @@ public class ErrorResponseInterceptor implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Log.d("errorresponse","ErrorResponseInterceptor called");
         Response response = chain.proceed(chain.request());
-
         ResponseBody responseBody = null;
         String responseBodyString = "";
         if (mightContainCustomError(response)) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,10 +51,13 @@ public class MyPostsFragment extends Fragment implements CaseListView, SwipeRefr
     @Inject
     MyPostListPresentor myPostListPresentor;
 
+    @BindView(R.id.list_container)
+    RelativeLayout container;
+
     @BindView(R.id.list_case)
     RecyclerView rv_users;
     @BindView(R.id.rl_progress)
-    FrameLayout rl_progress;
+    RelativeLayout rl_progress;
     @BindView(R.id.rl_retry)
     RelativeLayout rl_retry;
     @BindView(R.id.bt_retry)
@@ -271,7 +274,9 @@ public class MyPostsFragment extends Fragment implements CaseListView, SwipeRefr
 
     @Override
     public void showSnackBar(String message) {
-
+        Snackbar snackbar = Snackbar
+                .make(container, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     @Override

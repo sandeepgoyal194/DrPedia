@@ -26,10 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.R;
-import com.softmine.drpedia.home.activity.CaseDiscussionDetail;
 import com.softmine.drpedia.home.di.ActivityModule;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.di.DaggerCaseStudyComponent;
@@ -302,8 +300,8 @@ public class DashBoardActivity extends AppCompatActivity implements DashBoardFra
                 // update the main content by replacing fragments
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
+               /* fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);*/
                 fragmentTransaction.replace(R.id.fragmentContainer, fragment, CURRENT_TAG);
                 fragmentTransaction.commitAllowingStateLoss();
             }

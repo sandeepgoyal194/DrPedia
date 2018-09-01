@@ -41,7 +41,6 @@ public class UserBookmarksListFragment extends Fragment implements CaseListView 
 
     private BookmarkCaseListListener bookmarkCaseListListener;
 
-
     @Inject
     CaseListAdapter caseListAdapter;
     @Inject
@@ -50,7 +49,7 @@ public class UserBookmarksListFragment extends Fragment implements CaseListView 
     @BindView(R.id.list_case)
     RecyclerView rv_users;
     @BindView(R.id.rl_progress)
-    FrameLayout rl_progress;
+    RelativeLayout rl_progress;
     @BindView(R.id.rl_retry)
     RelativeLayout rl_retry;
     @BindView(R.id.bt_retry)

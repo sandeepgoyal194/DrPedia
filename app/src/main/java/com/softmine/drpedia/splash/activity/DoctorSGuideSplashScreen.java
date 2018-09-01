@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.activity.DashBoardActivity;
@@ -17,6 +16,8 @@ import com.softmine.drpedia.login.view.SocialLoginActivity;
 import com.softmine.drpedia.splash.di.DaggerSplashComponent;
 import com.softmine.drpedia.splash.di.SplashComponent;
 import com.softmine.drpedia.utils.UserManager;
+
+import javax.inject.Inject;
 
 import frameworks.AppBaseApplication;
 import frameworks.appsession.AppSessionManager;
@@ -29,7 +30,9 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
     public static int SPLASH_TIME_OUT = 3000;
 
 
+    @Inject
     AppSessionManager appSessionManager;
+
     UserManager userManager;
     SplashComponent splashComponent;
     User userInfo;
@@ -42,10 +45,28 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_doctors_guide_splash);
         this.initInjector();
 
-        appSessionManager = new AppSessionManager(this);
+    //    appSessionManager = new AppSessionManager(this);
 
-        SessionValue sessionValue = appSessionManager.getSession();
+       // SessionValue sessionValue = appSessionManager.getSession();
         userManager = new UserManager(this);
+
+        if(appSessionManager!=null)
+        {
+            SessionValue sessionValue = appSessionManager.getSession();
+            if(sessionValue!=null)
+            {
+                Log.d("loginresponse","session value from login activity==="+sessionValue.getApi_key());
+            }
+            else
+            {
+                Log.d("loginresponse"," session value is null===");
+            }
+        }
+        else
+        {
+            Log.d("loginresponse","app session manager is null===");
+        }
+        SessionValue sessionValue = null;
         if(sessionValue!=null)
             Log.d("loginresponse","session value===="+sessionValue.getApi_key());
         else

@@ -1,8 +1,10 @@
 package com.softmine.drpedia.home.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
-
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.IFeedbackView;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
@@ -41,6 +43,9 @@ public class FeedbackFragment extends Fragment implements IFeedbackView, Materia
     EditText feedback_desc;
 
     String select_type;
+
+    @BindView(R.id.feedbackContainer)
+    ScrollView feedbackContainer;
 
     @Inject
     FeedbackPresentor feedbackPresentor;
@@ -84,7 +89,6 @@ public class FeedbackFragment extends Fragment implements IFeedbackView, Materia
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         feedbackPresentor.setView(this);
-
     }
 
    /* @Override
@@ -161,6 +165,43 @@ public class FeedbackFragment extends Fragment implements IFeedbackView, Materia
 
     @Override
     public void showSnackBar(String message) {
+        Snackbar snackbar = Snackbar
+                .make(feedbackContainer, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    @Override
+    public void setResult(int result) {
+
+    }
+
+    @Override
+    public void setResult(int result, Intent data) {
+
+    }
+
+    @Override
+    public void finish() {
+
+    }
+
+    @Override
+    public void addEmptyLayout() {
+
+    }
+
+    @Override
+    public void showProgressBar() {
+
+    }
+
+    @Override
+    public void showProgressBar(String message) {
+
+    }
+
+    @Override
+    public void hideProgressBar() {
 
     }
 

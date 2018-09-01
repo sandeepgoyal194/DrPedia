@@ -3,16 +3,23 @@ package com.softmine.drpedia.home.presentor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-
+import com.softmine.drpedia.exception.DefaultErrorBundle;
+import com.softmine.drpedia.exception.ErrorBundle;
+import com.softmine.drpedia.exception.ErrorMessageFactory;
+import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.CaseUploadView;
 import com.softmine.drpedia.home.domain.usecases.UploadCaseDetailUseCase;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import frameworks.network.model.ResponseException;
 import frameworks.network.usecases.RequestParams;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class UploadCasePresentor implements ICaseUploadPresentor {
@@ -42,6 +49,12 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
         this.caseUploadView.selectVideoFromStorage();
     }
 
+    private void showErrorMessage(ErrorBundle errorBundle) {
+        String errorMessage = ErrorMessageFactory.create(caseUploadView.getContext(),
+                errorBundle.getException());
+        caseUploadView.showSnackBar(errorMessage);
+    }
+
     @Override
     public void uploadCaseDetails() {
 
@@ -62,17 +75,6 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
         Log.d("uploadlogs","case desc===="+caseDesc);
         Log.d("uploadlogs","case uri size===="+imageBytes.size());
 
-      /*  Log.d("uploadlogs","case type===="+caseType);
-        Log.d("uploadlogs","caseid==="+imageType);
-        Log.d("uploadlogs","case desc===="+caseDesc);
-        Log.d("uploadlogs","case uri size===="+imageBytes.size());
-
-        RequestBody requestCaseType = RequestBody.create(MediaType.parse("text/plain"), caseType);
-        RequestBody requestCaseDesc = RequestBody.create(MediaType.parse("text/plain"), caseDesc);
-        RequestBody requestCasetypeID = RequestBody.create(MediaType.parse("text/plain"), imageType);
-        RequestBody requestImageFile = RequestBody.create(MediaType.parse("image/*"), imageBytes);
-        MultipartBody.Part imageBody = MultipartBody.Part.createFormData("image", "caseimage.jpg", requestImageFile);*/
-
         RequestParams requestParams =   UploadCaseDetailUseCase.createRequestParams(imageType,caseType,caseDesc,imageBytes);
 
         this.uploadCaseDetailUseCase.execute(requestParams,new Subscriber<String>() {
@@ -84,13 +86,47 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
 
             @Override
             public void onError(Throwable e) {
-                String errorMsg="this is an actual network Failure";
-                Log.d("uploadlogs","onError in upload");
                 UploadCasePresentor.this.caseUploadView.hideProgressBar();
-                if (e instanceof IOException) {
-                    UploadCasePresentor.this.caseUploadView.showSnackBar(errorMsg);
-                }
                 e.printStackTrace();
+                if(e instanceof IOException)
+                {
+                    if(e instanceof HttpException)
+                    {
+                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof ResponseException)
+                    {
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof NetworkConnectionException)
+                    {
+                        Log.d("loginresponse","other issues");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
+                    }
+                    else
+                    {
+                        Log.d("loginresponse", "other issue");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                }
+                else
+                {
+                    if(e instanceof JSONException) {
+                        Log.d("loginresponse", "Json Parsing exception");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof HttpException)
+                    {
+                        Log.d("loginresponse", "Http exception issue");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else
+                    {
+                        Log.d("loginresponse", "other issue");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                }
             }
 
             @Override

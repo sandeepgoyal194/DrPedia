@@ -27,7 +27,9 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
-        <activity android:name=".home.activity.DashBoardActivity" />
+        <activity android:name=".home.activity.DashBoardActivity"
+            android:theme="@style/DashBoardTheme">
+        </activity>
         <activity
             android:name=".home.activity.CaseDiscussionDetail"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
