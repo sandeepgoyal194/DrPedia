@@ -29,6 +29,7 @@
                 />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/img_loading"
                 android:src="@drawable/loading1"
                 android:layout_width="80dp"
@@ -43,28 +44,36 @@
                 android:visibility="gone"
                 />
 
-            <ImageView
-                android:id="@+id/case_playIcon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                android:src="@drawable/play5"/>
+
 
             <RelativeLayout
                 android:id="@+id/videoContainer"
                 android:layout_width="match_parent"
-                android:visibility="gone"
+
                 android:layout_height="match_parent">
+
+
 
                 <com.google.android.exoplayer2.ui.PlayerView
                     android:id="@+id/player_view"
-                    android:focusable="true"
-                    app:use_controller="false"
-                    android:layout_gravity="center"
                     android:layout_width="250dp"
-                    android:layout_height="250dp"/>
+                    android:layout_height="250dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center"
+                    android:focusable="true"
 
+                    app:use_controller="false" />
+
+                <ImageView
+                    android:id="@+id/case_playIcon"
+                    android:layout_width="44dp"
+                    android:layout_height="33dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:src="@drawable/play5"
+                    />
 
             </RelativeLayout>
             <ProgressBar

@@ -28,6 +28,10 @@ public class ErrorMessageFactory {
         }else if(exception instanceof ResponseException){
             message = exception.getMessage();
         }
+        else
+        {
+            message = exception.getMessage();
+        }
 
         return message;
     }

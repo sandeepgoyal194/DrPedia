@@ -277,6 +277,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                                 @Override
                                 public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
                                     Log.d("hrview","false");
+                                    img_loading.setVisibility(View.VISIBLE);
                                     return false;
                                 }
 
@@ -284,7 +285,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                                 public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                     Log.d("hrview","readey");
 
-                                    img_loading.setVisibility(View.GONE);
+                                    bar.setVisibility(View.GONE);
                                     return false;
                                 }
                             })
@@ -293,7 +294,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
-                    bar.setVisibility(View.GONE);
+                  //  bar.setVisibility(View.GONE);
                 }
                 else
                 {
@@ -305,6 +306,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                                 @Override
                                 public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
                                     Log.d("hrview","false");
+                                    img_loading.setVisibility(View.VISIBLE);
                                     return false;
                                 }
 
@@ -312,7 +314,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                                 public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                     Log.d("hrview","readey");
 
-                                    img_loading.setVisibility(View.GONE);
+                                    bar.setVisibility(View.GONE);
                                     return false;
                                 }
                             })
@@ -321,7 +323,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
-                    bar.setVisibility(View.GONE);
                 }
 
                 //scaleImage(mediaImage);
@@ -355,7 +356,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     preparePlayer(mediaSource);
 
                     videoContainer.setVisibility(View.VISIBLE);
-                    casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
                   //  bvp.start();
                    // bvp.pause();
@@ -373,7 +373,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                     MediaSource mediaSource = buildMediaSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
                     preparePlayer(mediaSource);
                     videoContainer.setVisibility(View.VISIBLE);
-                    casePlayIcon.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
                   //  bvp.start();
                    // bvp.pause();
@@ -402,6 +401,8 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         {
             boolean haveStartPosition = currentWindow != C.INDEX_UNSET;
             if (haveStartPosition) {
+
+                if(player!=null)
                 player.seekTo(currentWindow, playbackPosition);
             }
 
@@ -448,6 +449,8 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                 Log.d("bufferupdate" , "position  else "+player.getBufferedPosition());
                 Log.d("bufferupdate" , "percentage  else "+player.getBufferedPercentage());
                 bar.setVisibility(View.INVISIBLE);
+                casePlayIcon.setVisibility(View.VISIBLE);
+                //mPlayerView.findViewById(R.id.exo_play).setVisibility(View.VISIBLE);
             }
         }
 

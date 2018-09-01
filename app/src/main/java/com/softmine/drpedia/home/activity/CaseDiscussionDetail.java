@@ -31,7 +31,7 @@ public class CaseDiscussionDetail extends AppCompatActivity implements HasCompon
         Intent intentExtras = getIntent();
       //  Bundle bundle = intentExtras.getExtras();
         caseItem = (CaseItem) intentExtras.getSerializableExtra(DashBoardActivity.CASE_DETAIL);
-        getSupportActionBar().setTitle(caseItem.getShort_desc());
+        getSupportActionBar().setTitle("");
         this.addFragment(savedInstanceState);
         this.initializeInjector();
     }

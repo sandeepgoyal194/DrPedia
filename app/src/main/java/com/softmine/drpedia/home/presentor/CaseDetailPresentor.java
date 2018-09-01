@@ -4,6 +4,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 
+import com.softmine.drpedia.exception.DataException;
+import com.softmine.drpedia.exception.DefaultErrorBundle;
+import com.softmine.drpedia.exception.ErrorBundle;
+import com.softmine.drpedia.exception.ErrorMessageFactory;
+import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.CaseDetailView;
 import com.softmine.drpedia.home.domain.usecases.GetCaseDetailUseCase;
 import com.softmine.drpedia.home.domain.usecases.GetCaseStudyBookmarkUseCase;
@@ -13,12 +18,17 @@ import com.softmine.drpedia.home.domain.usecases.UploadCommentUseCase;
 import com.softmine.drpedia.home.model.CaseItem;
 import com.softmine.drpedia.home.model.CommentData;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import frameworks.network.model.ResponseException;
 import frameworks.network.usecases.RequestParams;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class CaseDetailPresentor implements ICaseDetailPresentor {
@@ -57,6 +67,11 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
         this.caseDetailView.hideProgressBar();
     }
 
+    private void showErrorMessage(ErrorBundle errorBundle) {
+        String errorMessage = ErrorMessageFactory.create(caseDetailView.getContext(),
+                errorBundle.getException());
+        caseDetailView.showSnackBar(errorMessage);
+    }
 
     @Override
     public void doLikeorUnlikePost(String likeStatus, int postID) {
@@ -79,7 +94,8 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
                 //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
                 e.printStackTrace();
                 CaseDetailPresentor.this.hideViewLoading();
-                CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while liking Post");
+               // CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while liking Post");
+                CaseDetailPresentor.this.getErrorMessage(e , "Error occured while liking Post");
             }
 
             @Override
@@ -110,9 +126,11 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
                 Log.d("ItemDetail","image bookmarked in onError view");
                 CaseDetailPresentor.this.hideViewLoading();
-                CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while bookmark Post");
-                //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
                 e.printStackTrace();
+               // CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while bookmark Post");
+                CaseDetailPresentor.this.getErrorMessage(e , "Error occured while bookmark Post");
+                //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
+
             }
 
             @Override
@@ -142,9 +160,11 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
 
                 Log.d("ItemDetail","comment on post in onError view");
                 CaseDetailPresentor.this.hideViewLoading();
-                CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while uploading comment on Post");
-                //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
                 e.printStackTrace();
+               // CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while uploading comment on Post");
+                CaseDetailPresentor.this.getErrorMessage(e , "Error occured while uploading comments on Post");
+                //   Toast.makeText(CaseDetailPresentor.this.caseDetailView.getContext(),"image liked in onCompleted view",Toast.LENGTH_LONG).show();
+
             }
 
             @Override
@@ -175,7 +195,8 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
                 Log.d("ItemDetail","onError in loadComments");
                 e.printStackTrace();
                 CaseDetailPresentor.this.hideViewLoading();
-                CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while loading comments on Post");
+                //CaseDetailPresentor.this.caseDetailView.showSnackBar("Error occured while loading comments on Post");
+                CaseDetailPresentor.this.getErrorMessage(e , "Error occured while loading comments on Post");
             }
 
             @Override
@@ -211,6 +232,7 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
                 Log.d("ItemDetail","onError");
                 CaseDetailPresentor.this.hideViewLoading();
                 e.printStackTrace();
+                CaseDetailPresentor.this.getErrorMessage(e , "Error occured while updating post");
             }
 
             @Override
@@ -226,5 +248,48 @@ public class CaseDetailPresentor implements ICaseDetailPresentor {
         this.caseDetailView.updateCaseItemDetail(caseList.get(0));
     }
 
+
+    public void getErrorMessage(Throwable e , String message)
+    {
+        if(e instanceof IOException)
+        {
+            if(e instanceof HttpException)
+            {
+                Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+            }
+            else if(e instanceof ResponseException)
+            {
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+            }
+            else if(e instanceof NetworkConnectionException)
+            {
+                Log.d("loginresponse","other issues");
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
+            }
+            else
+            {
+                Log.d("loginresponse", "other issue");
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle(new DataException(message)));
+            }
+        }
+        else
+        {
+            if(e instanceof JSONException) {
+                Log.d("loginresponse", "Json Parsing exception");
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+            }
+            else if(e instanceof HttpException)
+            {
+                Log.d("loginresponse", "Http exception issue");
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+            }
+            else
+            {
+                Log.d("loginresponse", "other issue");
+                CaseDetailPresentor.this.showErrorMessage(new DefaultErrorBundle(new DataException(message)));
+            }
+        }
+    }
 
 }

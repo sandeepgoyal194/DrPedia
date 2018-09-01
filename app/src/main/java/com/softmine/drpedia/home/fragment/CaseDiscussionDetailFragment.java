@@ -86,7 +86,7 @@ public class CaseDiscussionDetailFragment extends Fragment implements CaseDetail
     RelativeLayout parentLayout;
 
     @BindView(R.id.rl_progress)
-    FrameLayout rl_progress;
+    RelativeLayout rl_progress;
 
     @Inject
     ImageLoader mImageLoader;
@@ -343,6 +343,8 @@ public class CaseDiscussionDetailFragment extends Fragment implements CaseDetail
         Snackbar snackbar = Snackbar
                 .make(parentLayout, message, Snackbar.LENGTH_LONG);
         snackbar.show();
+        isLikeStatus=true;
+        isBookmarkStatus=true;
     }
 
     @Override
