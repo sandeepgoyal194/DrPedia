@@ -55,32 +55,19 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
             SessionValue sessionValue = appSessionManager.getSession();
             if(sessionValue!=null)
             {
+                userInfo = userManager.getUser();
+                mHandler.sendEmptyMessageDelayed(START_DASHBOARD,SPLASH_TIME_OUT);
+                CaseStudyAppApplication.getParentApplication().setAuthId(sessionValue);
+                CaseStudyAppApplication.getParentApplication().setUser(userInfo);
                 Log.d("loginresponse","session value from login activity==="+sessionValue.getApi_key());
             }
             else
             {
+                mHandler.sendEmptyMessageDelayed(START_LOGIN,SPLASH_TIME_OUT);
+
                 Log.d("loginresponse"," session value is null===");
             }
         }
-        else
-        {
-            Log.d("loginresponse","app session manager is null===");
-        }
-        SessionValue sessionValue = null;
-        if(sessionValue!=null)
-            Log.d("loginresponse","session value===="+sessionValue.getApi_key());
-        else
-            Log.d("loginresponse","session value null====");
-
-        if(sessionValue == null ) {
-            mHandler.sendEmptyMessageDelayed(START_LOGIN,SPLASH_TIME_OUT);
-        } else {
-            userInfo = userManager.getUser();
-            mHandler.sendEmptyMessageDelayed(START_DASHBOARD,SPLASH_TIME_OUT);
-            CaseStudyAppApplication.getParentApplication().setAuthId(sessionValue);
-            CaseStudyAppApplication.getParentApplication().setUser(userInfo);
-        }
-
     }
 
     protected void initInjector() {

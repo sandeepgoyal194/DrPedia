@@ -30,9 +30,10 @@ public class PrefManager {
 
     public PrefManager(Context context) {
         this._context = context;
+        PREF_NAME = _context.getResources().getString(R.string.app_name);
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
-        PREF_NAME = _context.getResources().getString(R.string.app_name);
+        Log.e("pref_name",PREF_NAME);
     }
 
    public void putString(String id, String value) {
