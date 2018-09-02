@@ -79,6 +79,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
     @Inject
     ImageLoader mImageLoader;
 
+    View v;
 
     public MediaItemListAdapter(Context context) {
         this.mContext = context;
@@ -90,8 +91,16 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
 
         Log.d("mediaholder","onCreateViewHolder");
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.case_mediaitem, null);
-        return new CategoryHolder(v);
+        switch(viewType)
+        {
+            case 1:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.case_mediaitem_singleitem, null);
+                return new CategoryHolder(v);
+            case 2:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.case_mediaitem, null);
+                return new CategoryHolder(v);
+        }
+        return null;
     }
 
 
@@ -99,8 +108,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
     public void onViewAttachedToWindow(CategoryHolder holder) {
         Log.d("mediaholder","onViewAttachedToWindow");
         super.onViewAttachedToWindow(holder);
-      /*  holder.bvp.reset();
-        holder.bvp.release();*/
     }
 
     @Override
@@ -108,9 +115,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         super.onViewDetachedFromWindow(holder);
         Log.d("mediaholder","onViewDetachedFromWindow");
         Log.d("viewdetach","detached=="+holder.getAdapterPosition());
-
-    /*    holder.bvp.reset();
-        holder.bvp.release();*/
 
     }
 
@@ -132,17 +136,24 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
     public void onViewRecycled(CategoryHolder holder) {
         super.onViewRecycled(holder);
         Log.d("mediaholder","onViewRecycled");
-        //notifyDataSetChanged();
-       // holder.player=null;
     }
 
     @Override
     public void onBindViewHolder(MediaItemListAdapter.CategoryHolder holder, int position) {
         Log.d("mediaholder","onBindViewHolder");
         final CaseMediaItem caseMediaItem = mediaItemList.get(position);
-        holder.setContent(caseMediaItem);
-        Log.d("downloadVideo", "position=="+position);
 
+        switch(holder.getItemViewType())
+        {
+            case 1:
+                holder.setContent(caseMediaItem,mediaItemList.size());
+                break;
+            case 2:
+                holder.setContent(caseMediaItem,mediaItemList.size());
+                break;
+        }
+
+        Log.d("downloadVideo", "position=="+position);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,6 +215,20 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         }
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+        if(mediaItemList.size()==1)
+        {
+            return 1;
+        }
+        else if(mediaItemList.size()>1)
+        {
+            return 2;
+        }
+        return 2;
+    }
+
 
     class CategoryHolder extends RecyclerView.ViewHolder implements Player.EventListener {
 
@@ -256,8 +281,103 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
             bar.setVisibility(View.VISIBLE);
         }
 
+        public void loadExternalImageWithoutTransformation(CaseMediaItem caseMediaItem )
+        {
+            glide.with(mView.getContext())
+                    .load("file://"+caseMediaItem.getImage())
+                    .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
+                    .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
+                            Log.d("hrview","false");
+                            img_loading.setVisibility(View.VISIBLE);
+                            return false;
+                        }
 
-        public void setContent(CaseMediaItem caseMediaItem) {
+                        @Override
+                        public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            Log.d("hrview","readey");
+
+                            bar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(mediaImage);
+        }
+
+        public void loadExternalImageWithTransformation(CaseMediaItem caseMediaItem )
+        {
+            glide.with(mView.getContext())
+                    .load("file://"+caseMediaItem.getImage())
+                    .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
+                    .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
+                            Log.d("hrview","false");
+                            img_loading.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            Log.d("hrview","readey");
+
+                            bar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(mediaImage);
+        }
+
+        public void loadImageFromUrlWithTransformation(CaseMediaItem caseMediaItem)
+        {
+            glide.with(mView.getContext())
+                    .load(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getImage())
+                    .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
+                    .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
+                            Log.d("hrview","false");
+                            img_loading.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            Log.d("hrview","readey");
+
+                            bar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(mediaImage);
+        }
+
+        public void loadImageFromUrlWithoutTransformation(CaseMediaItem caseMediaItem)
+        {
+            glide.with(mView.getContext())
+                    .load(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getImage())
+                    .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
+                    .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
+                            Log.d("hrview","false");
+                            img_loading.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            Log.d("hrview","readey");
+
+                            bar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(mediaImage);
+        }
+
+        public void setContent(CaseMediaItem caseMediaItem , int size) {
 
             mMediaItem = caseMediaItem;
             Log.d("hrview","=================================");
@@ -270,26 +390,15 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                 if(caseMediaItem.getSrc()!=null)
                 {
                     Log.d("hrview","image source "+caseMediaItem.getSrc());
-                    glide.with(mView.getContext())
-                            .load("file://"+caseMediaItem.getImage())
-                            .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
-                            .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
-                                    Log.d("hrview","false");
-                                    img_loading.setVisibility(View.VISIBLE);
-                                    return false;
-                                }
 
-                                @Override
-                                public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    Log.d("hrview","readey");
-
-                                    bar.setVisibility(View.GONE);
-                                    return false;
-                                }
-                            })
-                            .into(mediaImage);
+                    if(size==1)
+                    {
+                        loadExternalImageWithoutTransformation(caseMediaItem);
+                    }
+                    else
+                    {
+                        loadExternalImageWithTransformation(caseMediaItem);
+                    }
                     mediaImage.setVisibility(View.VISIBLE);
                     videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
@@ -299,26 +408,14 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                 else
                 {
                     Log.d("hrview","image source "+caseMediaItem.getSrc());
-                    glide.with(mView.getContext())
-                            .load(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getImage())
-                            .bitmapTransform(new ScaleBitmapTransformation(mView.getContext()))
-                            .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
-                                    Log.d("hrview","false");
-                                    img_loading.setVisibility(View.VISIBLE);
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    Log.d("hrview","readey");
-
-                                    bar.setVisibility(View.GONE);
-                                    return false;
-                                }
-                            })
-                            .into(mediaImage);
+                    if(size==1)
+                    {
+                        loadImageFromUrlWithoutTransformation(caseMediaItem);
+                    }
+                    else
+                    {
+                        loadImageFromUrlWithTransformation(caseMediaItem);
+                    }
                     mediaImage.setVisibility(View.VISIBLE);
                     videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
