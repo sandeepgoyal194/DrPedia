@@ -91,10 +91,27 @@ public class    ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHol
                     }
                 })
                 .into(holder.imageView);
+       // holder.imageView.setTag(position);
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                /*if(mSparseBooleanArray.get(holder.getAdapterPosition()))
+                {
+                    mSparseBooleanArray.put((Integer) holder.imageView.getTag(),false);
+                }
+                else
+                {
+                    mSparseBooleanArray.put((Integer) holder.imageView.getTag(),false);
+                }*/
+                holder.checkBox.toggle();
+
+            }
+        });
         holder.checkBox.setTag(position);
         holder.checkBox.setChecked(mSparseBooleanArray.get(position));
         holder.checkBox.setOnCheckedChangeListener(mCheckedChangeListener);
+
     }
 
     @Override
