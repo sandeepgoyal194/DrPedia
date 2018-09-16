@@ -9,10 +9,9 @@
         android:layout_gravity="center"
         android:src="@drawable/loading"
         />
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:paddingLeft="5dp"
         android:paddingTop="2dp">
 
@@ -24,5 +23,18 @@
             android:scrollbarSize="3dp">
 
         </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_alignBottom="@+id/horizontal_recycler_view_item"
+            android:layout_alignParentStart="true"
+            android:background="@color/list_header_color"
+            android:gravity="center"
+            android:text="This is regarding Dentist procedure"
+
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+    </RelativeLayout>
 </FrameLayout>

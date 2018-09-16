@@ -44,7 +44,7 @@
             android:layout_margin="16dp"
             android:scaleType="center"
             app:fabSize="normal"
-            android:src="@drawable/fab7"
+            android:src="@drawable/fab9"
             app:backgroundTint="@color/colorPrimary"
           />
 

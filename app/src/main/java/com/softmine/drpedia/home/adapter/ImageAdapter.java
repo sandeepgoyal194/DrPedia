@@ -19,7 +19,7 @@ import com.softmine.drpedia.R;
 
 import java.util.ArrayList;
 
-public class    ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder>{
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder>{
 
     private ArrayList<String> mImagesList;
     private Context mContext;
