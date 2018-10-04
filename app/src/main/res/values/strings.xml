@@ -37,4 +37,9 @@
     <string name="casedesc_error">%s cannot be blank</string>
     <string name="postType">Post Type</string>
     <string name="postDesc">Post Description</string>
+    <string name="multipart_upload">Multipart Upload</string>
+    <string name="uploading">Uploading files</string>
+    <string name="upload_success">Upload completed successfully in [[ELAPSED_TIME]]</string>
+    <string name="upload_error">Error while uploading</string>
+    <string name="upload_cancelled">Upload has been cancelled</string>
 </resources>

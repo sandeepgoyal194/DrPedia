@@ -1,15 +1,20 @@
 package com.softmine.drpedia.home.presentor;
 
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.softmine.drpedia.R;
 import com.softmine.drpedia.exception.DefaultErrorBundle;
 import com.softmine.drpedia.exception.ErrorBundle;
 import com.softmine.drpedia.exception.ErrorMessageFactory;
 import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.CaseUploadView;
 import com.softmine.drpedia.home.domain.usecases.UploadCaseDetailUseCase;
+import com.softmine.drpedia.home.service.UploadService;
+import com.softmine.drpedia.home.service.UploadTaskParameters;
 
 import org.json.JSONException;
 
@@ -27,7 +32,7 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
 
     CaseUploadView caseUploadView;
     private UploadCaseDetailUseCase uploadCaseDetailUseCase;
-
+    protected UploadTaskParameters params = new UploadTaskParameters();
     @Inject
     public UploadCasePresentor(UploadCaseDetailUseCase uploadCaseDetailUseCase)
     {
@@ -60,7 +65,6 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
     public void uploadCaseDetails() {
 
 
-
         String caseType;
         String caseDesc;
         ArrayList<String> attachmentList;
@@ -71,7 +75,40 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
         attachmentList = (ArrayList<String>) this.caseUploadView.getDataUri();
         imageType = this.caseUploadView.getImageType();
 
-        if (TextUtils.isEmpty(caseType)) {
+        params.caseTitle = caseType;
+        params.caseDesc = caseDesc;
+        params.caseCategory = imageType;
+        params.attachmentList = attachmentList;
+
+        params.notificationConfig = this.caseUploadView.getNotificationConfig(R.string.multipart_upload);
+
+        if( params.notificationConfig!=null)
+        {
+            Log.d("MyService","notificationConfig not null");
+        }
+        else
+        {
+            Log.d("MyService","notificationConfig null");
+        }
+
+        final Intent intent = new Intent(this.caseUploadView.getContext(), UploadService.class);
+        intent.setAction(UploadService.getActionUpload());
+        intent.putExtra(UploadService.PARAM_TASK_PARAMETERS, params);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            if (params.notificationConfig == null)
+            {
+              throw new IllegalArgumentException("Android Oreo requires a notification configuration for the service to run. https://developer.android.com/reference/android/content/Context.html#startForegroundService(android.content.Intent)");
+            }
+             this.caseUploadView.getContext().startForegroundService(intent);
+        } else {
+            this.caseUploadView.getContext().startService(intent);
+        }
+
+        //this.caseUploadView.getContext().startService(intent);
+      /*  if (TextUtils.isEmpty(caseType)) {
             this.caseUploadView.onCaseTypeEmpty();
         } else if (TextUtils.isEmpty(caseDesc)) {
             this.caseUploadView.onCaseDescEmpty();
@@ -151,7 +188,7 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
                 }
             });
         }
-
+*/
     }
 
 

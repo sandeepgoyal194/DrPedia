@@ -1,5 +1,9 @@
 package com.softmine.drpedia.home;
 
+import android.support.annotation.StringRes;
+
+import com.softmine.drpedia.home.notification.UploadNotificationConfig;
+
 import java.util.List;
 
 import frameworks.basemvp.IView;
@@ -15,6 +19,8 @@ public interface CaseUploadView extends IView{
     String getCaseDesc();
 
     String getCaseType();
+
+    UploadNotificationConfig getNotificationConfig(@StringRes int title);
 
     List<String> getDataUri();
 

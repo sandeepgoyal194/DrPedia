@@ -5,12 +5,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -35,6 +37,7 @@ import com.softmine.drpedia.home.adapter.MediaItemListAdapter;
 import com.softmine.drpedia.home.customview.CaseMediaItemHorizontalRecyclerView;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.model.CaseMediaItem;
+import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 import com.softmine.drpedia.home.presentor.UploadCasePresentor;
 
 import java.io.ByteArrayOutputStream;
@@ -317,6 +320,36 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     @Override
     public String getCaseType() {
         return this.caseType.getText().toString();
+    }
+
+   @Override
+    public UploadNotificationConfig getNotificationConfig(@StringRes int title) {
+       Log.d("MyService","notificationConfig called");
+
+        UploadNotificationConfig config = new UploadNotificationConfig();
+       Log.d("MyService","notificationConfig message  "+config.getProgress().message);
+        config.setTitleForAllStatuses(getString(title))
+                .setRingToneEnabled(true);
+       config.getProgress().message = getString(R.string.uploading);
+       config.getProgress().iconResourceID = R.drawable.ic_upload;
+       config.getProgress().iconColorResourceID = Color.BLUE;
+      /* config.getProgress().actions.add(new UploadNotificationAction(
+               R.drawable.ic_cancelled,
+               getString(R.string.cancel_upload),
+               NotificationActions.getCancelUploadAction(this, 1, uploadId)));*/
+
+       config.getCompleted().message = getString(R.string.upload_success);
+       config.getCompleted().iconResourceID = R.drawable.ic_upload_success;
+       config.getCompleted().iconColorResourceID = Color.GREEN;
+
+       config.getError().message = getString(R.string.upload_error);
+       config.getError().iconResourceID = R.drawable.ic_upload_error;
+       config.getError().iconColorResourceID = Color.RED;
+
+       config.getCancelled().message = getString(R.string.upload_cancelled);
+       config.getCancelled().iconResourceID = R.drawable.ic_cancelled;
+       config.getCancelled().iconColorResourceID = Color.YELLOW;
+       return config;
     }
 
     @Override

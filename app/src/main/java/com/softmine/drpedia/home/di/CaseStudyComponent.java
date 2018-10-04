@@ -7,6 +7,7 @@ import com.softmine.drpedia.home.fragment.FeedbackFragment;
 import com.softmine.drpedia.home.fragment.MyPostsFragment;
 import com.softmine.drpedia.home.fragment.UploadCaseFragment;
 import com.softmine.drpedia.home.fragment.UserBookmarksListFragment;
+import com.softmine.drpedia.home.service.UploadService;
 import com.softmine.drpedia.profile.activity.EditProfile;
 import com.softmine.drpedia.profile.activity.Profile;
 
@@ -14,8 +15,8 @@ import dagger.Component;
 import frameworks.di.component.BaseAppComponent;
 
 @PerActivity
-@Component(dependencies = BaseAppComponent.class , modules = {ActivityModule.class, GetCaseStudyListModule.class})
-public interface CaseStudyComponent extends ActivityComponent{
+@Component(dependencies = BaseAppComponent.class , modules = {ActivityModule.class, GetCaseStudyListModule.class , ServiceModule.class})
+public interface CaseStudyComponent{
     void inject(DashBoardFragment dashBoardFragment);
     void inject(UserBookmarksListFragment userBookmarksListFragment);
     void inject(MyPostsFragment userPostsFragment);
@@ -24,4 +25,5 @@ public interface CaseStudyComponent extends ActivityComponent{
     void inject(UploadCaseFragment uploadCaseFragment);
     void inject(Profile profile);
     void inject(EditProfile editProfile);
+    void inject(UploadService service);
 }
