@@ -84,7 +84,7 @@ public class UploadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent == null || !getActionUpload().equals(intent.getAction())) {
-            return START_NOT_STICKY;
+            return START_REDELIVER_INTENT;
         }
 
         this.params = intent.getParcelableExtra(UploadService.PARAM_TASK_PARAMETERS);
@@ -254,7 +254,9 @@ public class UploadService extends Service {
         setRingtone(notification);
 
         notificationManager.notify(notificationId + 1, notification.build());
-        stopForeground(true);
+        if(isExecuteInForeground())
+            stopForeground(true);
+
         stopSelf();
     }
 

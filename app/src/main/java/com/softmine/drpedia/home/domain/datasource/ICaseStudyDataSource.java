@@ -5,6 +5,8 @@ package com.softmine.drpedia.home.domain.datasource;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
+import com.softmine.drpedia.home.model.CategoryListResponse;
+import com.softmine.drpedia.home.model.CategoryMainItem;
 import com.softmine.drpedia.home.model.CommentData;
 
 import java.util.List;
@@ -29,4 +31,5 @@ public interface ICaseStudyDataSource {
     Observable<LoginResponse> getUserProfile();
     Observable<LoginResponse> updateUserProfile(String userid , String userData);
     Observable<String> reportFeedback(String feedbackBody);
+    Observable<List<CategoryMainItem>> categoryList();
 }

@@ -15,5 +15,4 @@ public interface CaseListView extends IView {
     public void renderCaseList(Collection<? extends CaseItem> caseStudyCollection);
     void viewUser(CaseItem CaseItem);
 
-
 }

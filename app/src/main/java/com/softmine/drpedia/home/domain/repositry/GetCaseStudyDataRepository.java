@@ -7,6 +7,7 @@ import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.domain.datasource.GetCaseStudyDataFactory;
 import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
+import com.softmine.drpedia.home.model.CategoryMainItem;
 import com.softmine.drpedia.home.model.CommentData;
 
 import java.util.List;
@@ -95,6 +96,11 @@ public class GetCaseStudyDataRepository implements ICaseStudyRepository {
     public Observable<String> reportFeedback(String feedbackBody) {
         Log.d("feedbacklog","ReportFeedback repo");
         return this.getCaseStudyDataFactory.createCaseStudyDataSource().reportFeedback(feedbackBody);
+    }
+
+    @Override
+    public Observable<List<CategoryMainItem>> categoryList() {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().categoryList();
     }
 
 

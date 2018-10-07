@@ -29,7 +29,9 @@
             tools:replace="android:theme" />
         <activity
             android:name=".home.activity.DashBoardActivity"
-            android:theme="@style/DashBoardTheme"></activity>
+            android:theme="@style/DashBoardTheme" />
+
+
         <activity
             android:name=".home.activity.CaseDiscussionDetail"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
@@ -61,7 +63,10 @@
         <service
             android:name=".home.service.UploadService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".home.activity.CategoryListActivity"
+            android:theme="@style/CategoryListTheme" ></activity>
     </application>
 
 </manifest>

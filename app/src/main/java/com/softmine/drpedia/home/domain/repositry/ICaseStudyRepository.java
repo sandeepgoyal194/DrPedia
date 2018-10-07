@@ -4,6 +4,7 @@ package com.softmine.drpedia.home.domain.repositry;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
+import com.softmine.drpedia.home.model.CategoryMainItem;
 import com.softmine.drpedia.home.model.CommentData;
 
 import java.util.HashMap;
@@ -30,5 +31,6 @@ public interface ICaseStudyRepository {
     Observable<LoginResponse> getUserProfile();
     Observable<LoginResponse> updateUserProfile(String userid , String userData);
     Observable<String> reportFeedback(String feedbackBody);
+    Observable<List<CategoryMainItem>> categoryList();
 
 }

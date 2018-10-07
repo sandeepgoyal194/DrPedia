@@ -28,7 +28,7 @@ public interface BaseAppComponent {
 
     Retrofit.Builder retrofitBuilder();
 
-    Gson gson();
+//    Gson gson();
 
     SessionValue userSession();
 

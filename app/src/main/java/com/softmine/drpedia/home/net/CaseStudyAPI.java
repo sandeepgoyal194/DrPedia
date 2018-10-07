@@ -3,6 +3,7 @@ package com.softmine.drpedia.home.net;
 import com.google.gson.JsonObject;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.model.CaseListResponse;
+import com.softmine.drpedia.home.model.CategoryListResponse;
 import com.softmine.drpedia.home.model.CommentsListResponse;
 import com.softmine.drpedia.home.model.FeedBackResponse;
 import com.softmine.drpedia.home.model.UserBookmarkListResponse;
@@ -65,5 +66,7 @@ public interface CaseStudyAPI {
     @POST("/problem/create")
     public Observable<Response<DataResponse<FeedBackResponse>>> reportFeedback(@Body JsonObject jsonObject );
 
+    @GET("postType")
+    public Observable<Response<DataResponse<CategoryListResponse>>> categoryList();
 
 }

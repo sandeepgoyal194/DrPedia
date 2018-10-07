@@ -21,13 +21,13 @@ public class RetrofitModule {
 
     @ApplicationScope
     @Provides
-    public Retrofit.Builder provideRetrofitBuilder(Gson gson) {
+    public Retrofit.Builder provideRetrofitBuilder() {
         return new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
     }
+  //.addConverterFactory(GsonConverterFactory.create(gson))
 
-    @ApplicationScope
+   /* @ApplicationScope
     @Provides
     public Gson provideGson() {
         return new GsonBuilder()
@@ -35,7 +35,7 @@ public class RetrofitModule {
                 .setPrettyPrinting()
                 .serializeNulls()
                 .create();
-    }
+    }*/
 
 
 

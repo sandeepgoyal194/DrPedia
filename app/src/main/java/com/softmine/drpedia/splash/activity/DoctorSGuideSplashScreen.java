@@ -10,7 +10,8 @@ import android.util.Log;
 
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.R;
-import com.softmine.drpedia.home.activity.DashBoardActivity;
+import com.softmine.drpedia.expendablerecylerview.MultiCheckActivity;
+import com.softmine.drpedia.home.activity.CategoryListActivity;
 import com.softmine.drpedia.login.model.User;
 import com.softmine.drpedia.login.view.SocialLoginActivity;
 import com.softmine.drpedia.splash.di.DaggerSplashComponent;
@@ -84,8 +85,8 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity {
             switch (msg.what) {
                 case START_DASHBOARD:
                     Log.d("loginresponse","open dashboard");
-                    i.setClass(DoctorSGuideSplashScreen.this, DashBoardActivity.class);
-                    i.putExtra("user",userInfo);
+                    i.setClass(DoctorSGuideSplashScreen.this, CategoryListActivity.class);
+            //        i.putExtra("user",userInfo);
                     break;
                 case START_LOGIN:
                     Log.d("loginresponse","open SocialLoginActivity");
