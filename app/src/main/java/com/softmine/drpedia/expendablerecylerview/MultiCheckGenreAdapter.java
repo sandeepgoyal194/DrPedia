@@ -20,11 +20,6 @@ public class MultiCheckGenreAdapter extends
     Log.d("categoryListItems" , "MultiCheckGenreAdapter size : "+groups.size());
   }
 
-  public void get1()
-  {
-    Log.d("categoryListItems" , "get called");
-    super.notifyDataSetChanged();
-  }
 
   @Override
   public MultiCheckArtistViewHolder onCreateCheckChildViewHolder(ViewGroup parent, int viewType) {

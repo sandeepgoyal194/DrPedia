@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class CategoryListResponse implements Serializable {
-
+public class UserDetailInterestType implements Serializable
+{
     public List<CategoryMainItemResponse> getData() {
         return data;
     }
@@ -15,16 +15,7 @@ public class CategoryListResponse implements Serializable {
         this.data = data;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    @SerializedName(value="Posttype")
+    @SerializedName(value="intrests")
     List<CategoryMainItemResponse> data;
-    @SerializedName(value="message")
-    String message;
+
 }

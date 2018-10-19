@@ -69,4 +69,7 @@ public interface CaseStudyAPI {
     @GET("postType")
     public Observable<Response<DataResponse<CategoryListResponse>>> categoryList();
 
+    @POST("/intrests/create")
+    public Observable<Response<DataResponse<FeedBackResponse>>> createUserInterest(@Body JsonObject jsonObject );
+
 }

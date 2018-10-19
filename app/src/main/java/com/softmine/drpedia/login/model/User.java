@@ -1,6 +1,11 @@
 package com.softmine.drpedia.login.model;
 
+import com.google.gson.annotations.SerializedName;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
+import com.softmine.drpedia.home.model.UserDetailInterestType;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
 
@@ -13,6 +18,17 @@ public class User implements Serializable {
     String dob;
     String authToken;
     String mobile_no;
+
+    public List<CategoryMainItemResponse> getData() {
+        return data;
+    }
+
+    public void setData(List<CategoryMainItemResponse> data) {
+        this.data = data;
+    }
+
+    @SerializedName(value="intrests")
+    List<CategoryMainItemResponse> data;
 
     public User() {
     }

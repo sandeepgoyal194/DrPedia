@@ -55,4 +55,17 @@ public class SubCategoryItem implements  Parcelable {
 
     String subtype;
 
+    public static Creator<SubCategoryItem> getCREATOR() {
+        return CREATOR;
+    }
+
+    public int getIntrest_id() {
+        return intrest_id;
+    }
+
+    public void setIntrest_id(int intrest_id) {
+        this.intrest_id = intrest_id;
+    }
+
+    int intrest_id;
 }

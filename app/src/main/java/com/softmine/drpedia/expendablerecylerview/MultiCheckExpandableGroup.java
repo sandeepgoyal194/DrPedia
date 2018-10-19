@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class MultiCheckExpandableGroup extends CheckedExpandableGroup {
 
-  public MultiCheckExpandableGroup(String title, List items) {
-    super(title, items);
+  public MultiCheckExpandableGroup(String title, List items, int categoryID) {
+    super(title, items,categoryID);
   }
 
   @Override

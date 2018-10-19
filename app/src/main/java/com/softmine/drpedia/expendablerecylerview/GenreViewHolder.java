@@ -26,10 +26,10 @@ public class GenreViewHolder extends GroupViewHolder {
   }
 
   public void setGenreTitle(ExpandableGroup genre) {
-    if (genre instanceof Genre) {
+   /* if (genre instanceof Genre) {
       genreName.setText(genre.getTitle());
       icon.setBackgroundResource(((Genre) genre).getIconResId());
-    }
+    }*/
     if (genre instanceof CategoryMainItem) {
       genreName.setText(genre.getTitle());
      // icon.setBackgroundResource(((CategoryMainItem) genre).getIconResId());

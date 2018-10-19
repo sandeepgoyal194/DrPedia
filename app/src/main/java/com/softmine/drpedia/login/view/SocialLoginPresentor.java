@@ -7,11 +7,14 @@ import com.softmine.drpedia.exception.ErrorBundle;
 import com.softmine.drpedia.exception.ErrorMessageFactory;
 import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.getToken.model.LoginResponse;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
+import com.softmine.drpedia.home.model.SubCategoryItem;
 import com.softmine.drpedia.login.domain.LoginFacebookUseCase;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -104,6 +107,20 @@ public class SocialLoginPresentor extends AppBasePresenter<ILoginViewContractor.
                 Log.d("loginresponse","email id==="+loginResponse.getList().get(0).getEmailid());
                 Log.d("loginresponse","gender==="+loginResponse.getList().get(0).getGender());
                 Log.d("loginresponse","DOB==="+loginResponse.getList().get(0).getDob());
+
+                List<CategoryMainItemResponse> res = loginResponse.getList().get(0).getData();
+
+                for(CategoryMainItemResponse res1 : res)
+                {
+                    Log.d("loginresponse","Main Category name==="+res1.getCategoryName());
+                    Log.d("loginresponse","Main Category ID==="+res1.getCategoryID());
+                    for(SubCategoryItem item1 : res1.getSubCategory())
+                    {
+                        Log.d("loginresponse","sub Category name==="+item1.getSubtype());
+                        Log.d("loginresponse","sub Category ID==="+item1.getSubtype_id());
+                        Log.d("loginresponse","sub Category interest ID==="+item1.getIntrest_id());
+                    }
+                }
 
                 getView().setLoginResponse(loginResponse);
                 getView().startActivity();

@@ -17,7 +17,7 @@ public class ChildCheckController {
   private ExpandableList expandableList;
   private OnChildrenCheckStateChangedListener childrenUpdateListener;
   private List<Integer> initialCheckedPositions;
-  HashMap<String,List<String>> map ;
+  HashMap<Integer,List<Integer>> map ;
   public ChildCheckController(ExpandableList expandableList,
                               OnChildrenCheckStateChangedListener listener) {
     this.expandableList = expandableList;
@@ -83,28 +83,28 @@ public class ChildCheckController {
       if (expandableList.groups.get(i) instanceof CheckedExpandableGroup)
       {
         CheckedExpandableGroup group = (CheckedExpandableGroup) expandableList.groups.get(i);
-        Log.d("checkedPos","group number "+i+" and name "+group.getTitle());
-        List<String> selected1 = new ArrayList<>();
+      //  Log.d("checkedPos","group ID "+group.getCategoryID()+" and name "+group.getTitle());
+        List<Integer> selected1 = new ArrayList<>();
         for (int j = 0; j < group.getItemCount(); j++)
         {
           if (group.isChildChecked(j))
           {
             SubCategoryItem artist = (SubCategoryItem) group.getItems().get(j);
-            Log.d("checkedPos","child number "+j+" and name "+artist.getSubtype());
+        //    Log.d("checkedPos","child ID "+artist.getSubtype_id()+" and name "+artist.getSubtype());
             long packedPosition = ExpandableListView.getPackedPositionForChild(i, j);
             selected.add(expandableList.getFlattenedChildIndex(packedPosition));
-            selected1.add(artist.getSubtype());
+            selected1.add(artist.getSubtype_id());
           }
         }
         if(group.getItemCount()>0)
-        map.put(group.getTitle(),selected1);
+        map.put(group.getCategoryID(),selected1);
       }
     }
     return selected;
   }
 
 
-  public HashMap<String, List<String>> getMap() {
+  public HashMap<Integer, List<Integer>> getMap() {
     return map;
   }
 

@@ -1,16 +1,15 @@
 package com.softmine.drpedia.expendablerecylerview;
 
 import com.softmine.drpedia.home.model.SubCategoryItem;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.List;
 
-public class Genre extends ExpandableGroup<SubCategoryItem> {
+public class Genre{
 
   private int iconResId;
 
   public Genre(String title, List<SubCategoryItem> items, int iconResId) {
-    super(title, items);
+   // super(title, items);
     this.iconResId = iconResId;
   }
 

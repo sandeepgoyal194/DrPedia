@@ -14,8 +14,8 @@ public abstract class CheckedExpandableGroup extends ExpandableGroup {
 
   public boolean[] selectedChildren;
 
-  public CheckedExpandableGroup(String title, List items) {
-    super(title, items);
+  public CheckedExpandableGroup(String title, List items, int categoryID) {
+    super(title, items,categoryID);
     selectedChildren = new boolean[items.size()];
     for (int i = 0; i < items.size(); i++) {
       selectedChildren[i] = false;

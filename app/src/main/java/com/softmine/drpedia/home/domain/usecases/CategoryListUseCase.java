@@ -1,8 +1,7 @@
 package com.softmine.drpedia.home.domain.usecases;
 
 import com.softmine.drpedia.home.domain.repositry.ICaseStudyRepository;
-import com.softmine.drpedia.home.model.CaseItem;
-import com.softmine.drpedia.home.model.CategoryMainItem;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import frameworks.network.usecases.RequestParams;
 import frameworks.network.usecases.UseCase;
 import rx.Observable;
 
-public class CategoryListUseCase extends UseCase<List<CategoryMainItem>> {
+public class CategoryListUseCase extends UseCase<List<CategoryMainItemResponse>> {
 
     private final ICaseStudyRepository getCaseRepo;
 
@@ -23,7 +22,7 @@ public class CategoryListUseCase extends UseCase<List<CategoryMainItem>> {
     }
 
     @Override
-    public Observable<List<CategoryMainItem>> createObservable(RequestParams requestParams) {
+    public Observable<List<CategoryMainItemResponse>> createObservable(RequestParams requestParams) {
         return this.getCaseRepo.categoryList();
     }
 }

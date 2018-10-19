@@ -12,9 +12,20 @@ public class ExpandableGroup<T extends Parcelable> implements Parcelable {
   private String title;
   private List<T> items;
 
-  public ExpandableGroup(String title, List<T> items) {
+  public int getCategoryID() {
+    return categoryID;
+  }
+
+  public void setCategoryID(int categoryID) {
+    this.categoryID = categoryID;
+  }
+
+  private int categoryID;
+
+  public ExpandableGroup(String title, List<T> items ,int categoryID) {
     this.title = title;
     this.items = items;
+    this.categoryID = categoryID;
   }
 
   public String getTitle() {

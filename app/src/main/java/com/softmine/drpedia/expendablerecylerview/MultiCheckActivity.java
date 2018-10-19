@@ -20,7 +20,7 @@ public class MultiCheckActivity extends AppCompatActivity {
 
     private MultiCheckGenreAdapter adapter;
     List<CategoryMainItem> multiCheckGenres;
-    HashMap<String,List<String>> map ;
+    HashMap<Integer,List<Integer>> map ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

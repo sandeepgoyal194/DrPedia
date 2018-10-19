@@ -9,14 +9,13 @@ import com.softmine.drpedia.home.model.BookmarkItem;
 import com.softmine.drpedia.home.model.CaseItem;
 import com.softmine.drpedia.home.model.CaseListResponse;
 import com.softmine.drpedia.home.model.CategoryListResponse;
-import com.softmine.drpedia.home.model.CategoryMainItem;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 import com.softmine.drpedia.home.model.CommentData;
 import com.softmine.drpedia.home.model.CommentsListResponse;
 import com.softmine.drpedia.home.model.FeedBackResponse;
 import com.softmine.drpedia.home.model.UserBookmarkListResponse;
 import com.softmine.drpedia.home.net.CaseStudyAPI;
 import com.softmine.drpedia.utils.GsonFactory;
-
 
 import java.util.List;
 import java.util.Map;
@@ -263,7 +262,7 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
     }
 
     @Override
-    public Observable<List<CategoryMainItem>> categoryList() {
+    public Observable<List<CategoryMainItemResponse>> categoryList() {
         Log.d("loginresponse","caseStudyList data source");
         return  this.caseStudyAPI.categoryList().map(new Func1<Response<DataResponse<CategoryListResponse>>, CategoryListResponse>() {
             @Override
@@ -271,11 +270,32 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
                 Log.d("loginresponse","caseStudyList call source");
                 return categoryListResponse.body().getData();
             }
-        }).map(new Func1<CategoryListResponse, List<CategoryMainItem>>() {
+        }).map(new Func1<CategoryListResponse, List<CategoryMainItemResponse>>() {
             @Override
-            public List<CategoryMainItem> call(CategoryListResponse caseListResponse) {
+            public List<CategoryMainItemResponse> call(CategoryListResponse caseListResponse) {
                 Log.d("loginresponse","caseStudyList list return");
                 return caseListResponse.getData();
+            }
+        });
+    }
+
+    @Override
+    public Observable<String> createUserInterest(String userInterestTypes) {
+
+        JsonElement element = GsonFactory.getGson().fromJson(userInterestTypes, JsonElement.class);
+        JsonObject jsonObject = element.getAsJsonObject();
+        return this.caseStudyAPI.createUserInterest(jsonObject).map(new Func1<Response<DataResponse<FeedBackResponse>>, FeedBackResponse>() {
+            @Override
+            public FeedBackResponse call(Response<DataResponse<FeedBackResponse>> feedbackResponse) {
+
+                Log.d("subTypePos","like data=="+feedbackResponse.body().getData().getMessage());
+                return feedbackResponse.body().getData();
+            }
+        }).map(new Func1<FeedBackResponse, String>() {
+            @Override
+            public String call(FeedBackResponse feedBackResponse) {
+                Log.d("subTypePos","like message=="+feedBackResponse.getMessage());
+                return feedBackResponse.getMessage();
             }
         });
     }

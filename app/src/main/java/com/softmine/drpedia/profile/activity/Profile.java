@@ -2,6 +2,7 @@ package com.softmine.drpedia.profile.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,10 +18,14 @@ import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.di.DaggerCaseStudyComponent;
 import com.softmine.drpedia.home.di.GetCaseStudyListModule;
 import com.softmine.drpedia.home.glide.CircleTransform;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
+import com.softmine.drpedia.home.model.SubCategoryItem;
 import com.softmine.drpedia.login.model.User;
 import com.softmine.drpedia.profile.IProfileView;
 import com.softmine.drpedia.profile.presentor.ProfilePresentor;
 import com.softmine.drpedia.utils.UserManager;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -100,6 +105,30 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
     }
 
     public void setUserView(User user) {
+
+
+        Log.d("userprofile","api key==="+user.getAuthToken());
+        Log.d("userprofile","name==="+user.getName());
+        Log.d("userprofile","user id==="+user.getUserid());
+        Log.d("userprofile","photo url==="+user.getPhotoUrl());
+        Log.d("userprofile","email id==="+user.getEmailid());
+        Log.d("userprofile","gender==="+user.getGender());
+        Log.d("userprofile","DOB==="+user.getDob());
+
+        List<CategoryMainItemResponse> res = user.getData();
+
+        for(CategoryMainItemResponse res1 : res)
+        {
+            Log.d("userprofile","Main Category name==="+res1.getCategoryName());
+            Log.d("userprofile","Main Category ID==="+res1.getCategoryID());
+            for(SubCategoryItem item1 : res1.getSubCategory())
+            {
+                Log.d("userprofile","sub Category name==="+item1.getSubtype());
+                Log.d("userprofile","sub Category ID==="+item1.getSubtype_id());
+                Log.d("userprofile","sub Category interest ID==="+item1.getIntrest_id());
+            }
+        }
+
         if (user.getEmailid() != null) {
             mEditTextEmail.setText(user.getEmailid());
         }
