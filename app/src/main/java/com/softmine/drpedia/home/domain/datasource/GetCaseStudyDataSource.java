@@ -15,6 +15,7 @@ import com.softmine.drpedia.home.model.CommentsListResponse;
 import com.softmine.drpedia.home.model.FeedBackResponse;
 import com.softmine.drpedia.home.model.UserBookmarkListResponse;
 import com.softmine.drpedia.home.net.CaseStudyAPI;
+import com.softmine.drpedia.splash.model.UserInterestCategoryListResponse;
 import com.softmine.drpedia.utils.GsonFactory;
 
 import java.util.List;
@@ -296,6 +297,24 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
             public String call(FeedBackResponse feedBackResponse) {
                 Log.d("subTypePos","like message=="+feedBackResponse.getMessage());
                 return feedBackResponse.getMessage();
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<CategoryMainItemResponse>> getUserInterestCount() {
+        Log.d("loginresponse","caseStudyList data source");
+        return  this.caseStudyAPI.getUserInterestCategoryList().map(new Func1<Response<DataResponse<UserInterestCategoryListResponse>>, UserInterestCategoryListResponse>() {
+            @Override
+            public UserInterestCategoryListResponse call(Response<DataResponse<UserInterestCategoryListResponse>> categoryListResponse) {
+                Log.d("loginresponse","caseStudyList call source");
+                return categoryListResponse.body().getData();
+            }
+        }).map(new Func1<UserInterestCategoryListResponse, List<CategoryMainItemResponse>>() {
+            @Override
+            public List<CategoryMainItemResponse> call(UserInterestCategoryListResponse caseListResponse) {
+                Log.d("loginresponse","caseStudyList list return");
+                return caseListResponse.getData();
             }
         });
     }

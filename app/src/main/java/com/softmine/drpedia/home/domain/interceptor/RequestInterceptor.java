@@ -46,6 +46,7 @@ public class RequestInterceptor implements Interceptor {
 
         if(!isThereInternetConnection())
         {
+            Log.d("loginresponse","netwrok not connected");
             throw new NetworkConnectionException();
         }
         Request request = chain.request().newBuilder().addHeader("DRPEDIA_TOKEN", appSessionManager.getSession().getApi_key()).build();

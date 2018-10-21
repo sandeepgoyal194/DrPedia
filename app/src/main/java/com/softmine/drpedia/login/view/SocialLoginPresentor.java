@@ -48,18 +48,18 @@ public class SocialLoginPresentor extends AppBasePresenter<ILoginViewContractor.
             @Override
             public void onCompleted() {
 
-                Log.d("loginresponse","onCompleted called");
+                Log.d("socialloginresponse","onCompleted called");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("loginresponse","error");
+                Log.d("socialloginresponse","error");
                 e.printStackTrace();
                 if(e instanceof IOException)
                 {
                     if(e instanceof HttpException)
                     {
-                        Log.d("bookmarkresponse","exception code  "+((HttpException)e).code());
+                        Log.d("socialloginresponse","exception code  "+((HttpException)e).code());
                         SocialLoginPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                     else if(e instanceof ResponseException)
@@ -68,29 +68,29 @@ public class SocialLoginPresentor extends AppBasePresenter<ILoginViewContractor.
                     }
                     else if(e instanceof NetworkConnectionException)
                     {
-                        Log.d("loginresponse","other issues");
+                        Log.d("socialloginresponse","other issues");
                         SocialLoginPresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
                     }
                     else
                     {
-                        Log.d("loginresponse", "other issue");
+                        Log.d("socialloginresponse", "other issue");
                         SocialLoginPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                 }
                 else
                 {
                     if(e instanceof JSONException) {
-                        Log.d("loginresponse", "Json Parsing exception");
+                        Log.d("socialloginresponse", "Json Parsing exception");
                         SocialLoginPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                     else if(e instanceof HttpException)
                     {
-                        Log.d("loginresponse", "Http exception issue");
+                        Log.d("socialloginresponse", "Http exception issue");
                         SocialLoginPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                     else
                     {
-                        Log.d("loginresponse", "other issue");
+                        Log.d("socialloginresponse", "other issue");
                         SocialLoginPresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
                     }
                 }
@@ -99,26 +99,26 @@ public class SocialLoginPresentor extends AppBasePresenter<ILoginViewContractor.
             @Override
             public void onNext(LoginResponse loginResponse) {
 
-                Log.d("loginresponse","api key==="+loginResponse.getAuthToken());
-                Log.d("loginresponse","message==="+loginResponse.getMessage());
-                Log.d("loginresponse","name==="+loginResponse.getList().get(0).getName());
-                Log.d("loginresponse","user id==="+loginResponse.getList().get(0).getUserid());
-                Log.d("loginresponse","photo url==="+loginResponse.getList().get(0).getPhotoUrl());
-                Log.d("loginresponse","email id==="+loginResponse.getList().get(0).getEmailid());
-                Log.d("loginresponse","gender==="+loginResponse.getList().get(0).getGender());
-                Log.d("loginresponse","DOB==="+loginResponse.getList().get(0).getDob());
+                Log.d("socialloginresponse","api key==="+loginResponse.getAuthToken());
+                Log.d("socialloginresponse","message==="+loginResponse.getMessage());
+                Log.d("socialloginresponse","name==="+loginResponse.getList().get(0).getName());
+                Log.d("socialloginresponse","user id==="+loginResponse.getList().get(0).getUserid());
+                Log.d("socialloginresponse","photo url==="+loginResponse.getList().get(0).getPhotoUrl());
+                Log.d("socialloginresponse","email id==="+loginResponse.getList().get(0).getEmailid());
+                Log.d("socialloginresponse","gender==="+loginResponse.getList().get(0).getGender());
+                Log.d("socialloginresponse","DOB==="+loginResponse.getList().get(0).getDob());
 
                 List<CategoryMainItemResponse> res = loginResponse.getList().get(0).getData();
 
                 for(CategoryMainItemResponse res1 : res)
                 {
-                    Log.d("loginresponse","Main Category name==="+res1.getCategoryName());
-                    Log.d("loginresponse","Main Category ID==="+res1.getCategoryID());
+                    Log.d("socialloginresponse","Main Category name==="+res1.getCategoryName());
+                    Log.d("socialloginresponse","Main Category ID==="+res1.getCategoryID());
                     for(SubCategoryItem item1 : res1.getSubCategory())
                     {
-                        Log.d("loginresponse","sub Category name==="+item1.getSubtype());
-                        Log.d("loginresponse","sub Category ID==="+item1.getSubtype_id());
-                        Log.d("loginresponse","sub Category interest ID==="+item1.getIntrest_id());
+                        Log.d("socialloginresponse","sub Category name==="+item1.getSubtype());
+                        Log.d("socialloginresponse","sub Category ID==="+item1.getSubtype_id());
+                        Log.d("socialloginresponse","sub Category interest ID==="+item1.getIntrest_id());
                     }
                 }
 

@@ -104,7 +104,7 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
     private void initializeInjector() {
         this.caseStudyComponent = DaggerCaseStudyComponent.builder()
                 .baseAppComponent(((AppBaseApplication)getApplication())
-                        .getBaseAppComponent())
+                .getBaseAppComponent())
                 .getCaseStudyListModule(new GetCaseStudyListModule(this))
                 .activityModule(getActivityModule())
                 .build();

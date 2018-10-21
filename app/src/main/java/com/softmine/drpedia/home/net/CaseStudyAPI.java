@@ -7,6 +7,7 @@ import com.softmine.drpedia.home.model.CategoryListResponse;
 import com.softmine.drpedia.home.model.CommentsListResponse;
 import com.softmine.drpedia.home.model.FeedBackResponse;
 import com.softmine.drpedia.home.model.UserBookmarkListResponse;
+import com.softmine.drpedia.splash.model.UserInterestCategoryListResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -72,4 +73,6 @@ public interface CaseStudyAPI {
     @POST("/intrests/create")
     public Observable<Response<DataResponse<FeedBackResponse>>> createUserInterest(@Body JsonObject jsonObject );
 
+    @GET("intrests")
+    public Observable<Response<DataResponse<UserInterestCategoryListResponse>>> getUserInterestCategoryList();
 }

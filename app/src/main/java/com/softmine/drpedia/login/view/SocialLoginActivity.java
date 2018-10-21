@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.getToken.model.LoginResponse;
+import com.softmine.drpedia.home.activity.CategoryListActivity;
 import com.softmine.drpedia.home.activity.DashBoardActivity;
 import com.softmine.drpedia.login.di.DaggerSocialLoginComponent;
 import com.softmine.drpedia.login.di.SocialLoginComponent;
@@ -154,14 +155,25 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
         appSessionManager.saveSession(sessionValue);
         userManager = new UserManager(this);
         userManager.saveUser(user);
-        Log.d("loginresponse","session value==="+appSessionManager.getSession().getApi_key());
+        Log.d("socialloginresponse","session value==="+appSessionManager.getSession().getApi_key());
     }
 
     @Override
     public void startActivity() {
-        Intent dashBoardIntent = new Intent(this, DashBoardActivity.class);
-        //   dashBoardIntent.putExtra("user",CaseStudyAppApplication.getParentApplication().getUser());
-        startActivity(dashBoardIntent);
-        finish();
+        Log.d("socialloginresponse","user interest data size is "+user.getData().size());
+        if(user.getData().size()>0)
+        {
+            Intent dashBoardIntent = new Intent(this, DashBoardActivity.class);
+            startActivity(dashBoardIntent);
+            finish();
+        }
+        else
+        {
+            Intent dashBoardIntent = new Intent(this, CategoryListActivity.class);
+            startActivity(dashBoardIntent);
+            finish();
+        }
+
+
     }
 }

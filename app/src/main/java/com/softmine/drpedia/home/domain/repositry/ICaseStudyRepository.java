@@ -32,4 +32,5 @@ public interface ICaseStudyRepository {
     Observable<String> reportFeedback(String feedbackBody);
     Observable<List<CategoryMainItemResponse>> categoryList();
     Observable<String> createUserInterest(String userInterestTypes);
+    Observable<List<CategoryMainItemResponse>> getUserInterestCount();
 }

@@ -108,5 +108,10 @@ public class GetCaseStudyDataRepository implements ICaseStudyRepository {
         return this.getCaseStudyDataFactory.createCaseStudyDataSource().createUserInterest(userInterestTypes);
     }
 
+    @Override
+    public Observable<List<CategoryMainItemResponse>> getUserInterestCount() {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().getUserInterestCount();
+    }
+
 
 }
