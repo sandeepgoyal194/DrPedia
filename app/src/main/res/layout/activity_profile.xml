@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -161,6 +162,19 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
                 android:background="#c0c0c0" />
+
+            <com.greenfrvr.hashtagview.HashtagView
+                android:id="@+id/hashtags2"
+                style="@style/HashtagView"
+                app:tagBackground="@drawable/item_bg_1"
+                app:tagForeground="@drawable/flat_button_light"
+                app:tagPaddingBottom="@dimen/padding_vertical"
+                app:tagPaddingLeft="@dimen/padding_horizontal"
+                app:tagPaddingRight="@dimen/padding_horizontal"
+                app:tagPaddingTop="@dimen/padding_vertical"
+                app:tagTextColor="#E5E5E5"/>
+
+
 
         </RelativeLayout>
     </RelativeLayout>

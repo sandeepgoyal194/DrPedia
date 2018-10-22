@@ -1,7 +1,11 @@
 package com.softmine.drpedia.profile.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.greenfrvr.hashtagview.HashtagView;
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.DoctorGuideBaseActivity;
 import com.softmine.drpedia.R;
@@ -25,6 +30,7 @@ import com.softmine.drpedia.profile.IProfileView;
 import com.softmine.drpedia.profile.presentor.ProfilePresentor;
 import com.softmine.drpedia.utils.UserManager;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -54,6 +60,13 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
 
     @BindView(R.id.dp_edt_dob)
     TextView mDOB;
+
+    protected @BindView(R.id.hashtags2)
+    HashtagView hashtagView2;
+
+    public static final List<String> TAGS = Arrays.asList("cupcake", "donut", "eclair", "froyo",
+            "gingerbread", "honeycomb", "icecreamsandwich", "jellybean", "kitkat", "lollipop", "marshmallow");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +77,19 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
         this.caseStudyComponent.inject(this);
     }
 
+    public static final HashtagView.DataTransform<String> HASH = new HashtagView.DataTransform<String>() {
+        @Override
+        public CharSequence prepare(String item) {
+            SpannableString spannableString = new SpannableString("#" + item);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#85F5F5F5")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannableString;
+        }
+    };
+
     @Override
     protected void onStart() {
         super.onStart();
+        hashtagView2.setData(TAGS, HASH);
         profilePresentor.setView(this);
     }
 
