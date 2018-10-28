@@ -1,4 +1,4 @@
-package com.softmine.drpedia.splash.di.usecase;
+package com.softmine.drpedia.profile.domain.usecases;
 
 import android.util.Log;
 
@@ -13,12 +13,12 @@ import frameworks.network.usecases.RequestParams;
 import frameworks.network.usecases.UseCase;
 import rx.Observable;
 
-public class SplashScreenUseCase extends UseCase<List<CategoryMainItemResponse>> {
+public class UserInterestUseCase extends UseCase<List<CategoryMainItemResponse>> {
 
     private final ICaseStudyRepository getCaseRepo;
 
     @Inject
-    SplashScreenUseCase(ICaseStudyRepository getCaseRepo)
+    UserInterestUseCase(ICaseStudyRepository getCaseRepo)
     {
         this.getCaseRepo = getCaseRepo;
     }
@@ -28,5 +28,4 @@ public class SplashScreenUseCase extends UseCase<List<CategoryMainItemResponse>>
         Log.d("splashresponse"," SplashScreenUseCase called");
         return this.getCaseRepo.getUserInterestCount();
     }
-
 }

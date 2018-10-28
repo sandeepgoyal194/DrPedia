@@ -153,7 +153,7 @@ public class SocialLoginActivity extends AppBaseActivity<ILoginViewContractor.Pr
         CaseStudyAppApplication.getParentApplication().setAuthId(sessionValue);
         CaseStudyAppApplication.getParentApplication().setUser(user);
         appSessionManager.saveSession(sessionValue);
-        userManager = new UserManager(this);
+       userManager = new UserManager(this);
         userManager.saveUser(user);
         Log.d("socialloginresponse","session value==="+appSessionManager.getSession().getApi_key());
     }

@@ -1,5 +1,7 @@
 package com.softmine.drpedia.profile.domain.usecases;
 
+import android.util.Log;
+
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.domain.repositry.ICaseStudyRepository;
 
@@ -22,6 +24,7 @@ public class UserProfileUseCase extends UseCase<LoginResponse> {
 
     @Override
     public Observable<LoginResponse> createObservable(RequestParams requestParams) {
+        Log.d("userprofile"," createObservable called");
         return this.getCaseRepo.getUserProfile();
     }
 }

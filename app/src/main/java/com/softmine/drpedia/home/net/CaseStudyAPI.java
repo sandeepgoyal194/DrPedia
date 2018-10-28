@@ -1,6 +1,7 @@
 package com.softmine.drpedia.home.net;
 
 import com.google.gson.JsonObject;
+import com.softmine.drpedia.getToken.data.net.LoginAPIURL;
 import com.softmine.drpedia.getToken.model.LoginResponse;
 import com.softmine.drpedia.home.model.CaseListResponse;
 import com.softmine.drpedia.home.model.CategoryListResponse;
@@ -26,6 +27,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 
 public interface CaseStudyAPI {
@@ -75,4 +77,7 @@ public interface CaseStudyAPI {
 
     @GET("intrests")
     public Observable<Response<DataResponse<UserInterestCategoryListResponse>>> getUserInterestCategoryList();
+
+    @GET("/user/userDetails")
+    public Observable<Response<DataResponse<LoginResponse>>> getUserProfile();
 }

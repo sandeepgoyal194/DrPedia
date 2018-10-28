@@ -1,12 +1,16 @@
 package com.softmine.drpedia.profile;
 
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 import com.softmine.drpedia.login.model.User;
 
-public interface IProfileView {
+import java.util.List;
 
-    public void showProgress();
-    public void hideProgress();
+import frameworks.basemvp.IView;
+
+public interface IProfileView extends IView{
+
     public void onProfileSyncedSuccessfully(User user);
     public void onProfileSyncFailed();
+    public void setUserInterestSize(List<CategoryMainItemResponse> categoryMainItemResponses);
 
 }

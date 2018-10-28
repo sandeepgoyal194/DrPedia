@@ -86,26 +86,26 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity implements Splas
                 userInfo = userManager.getUser();
                 CaseStudyAppApplication.getParentApplication().setAuthId(sessionValue);
                 CaseStudyAppApplication.getParentApplication().setUser(userInfo);
-               /* Log.d("loginresponse","session value from login activity==="+sessionValue.getApi_key());
-                Log.d("userprofile","api key==="+userInfo.getAuthToken());
-                Log.d("userprofile","name==="+userInfo.getName());
-                Log.d("userprofile","user id==="+userInfo.getUserid());
-                Log.d("userprofile","photo url==="+userInfo.getPhotoUrl());
-                Log.d("userprofile","email id==="+userInfo.getEmailid());
-                Log.d("userprofile","gender==="+userInfo.getGender());
-                Log.d("userprofile","DOB==="+userInfo.getDob());
+                /*Log.d("splashresponse","session value from login activity==="+sessionValue.getApi_key());
+                Log.d("splashresponse","api key==="+userInfo.getAuthToken());
+                Log.d("splashresponse","name==="+userInfo.getName());
+                Log.d("splashresponse","user id==="+userInfo.getUserid());
+                Log.d("splashresponse","photo url==="+userInfo.getPhotoUrl());
+                Log.d("splashresponse","email id==="+userInfo.getEmailid());
+                Log.d("splashresponse","gender==="+userInfo.getGender());
+                Log.d("splashresponse","DOB==="+userInfo.getDob());
 
                 List<CategoryMainItemResponse> res = userInfo.getData();
 
                 for(CategoryMainItemResponse res1 : res)
                 {
-                    Log.d("userprofile","Main Category name==="+res1.getCategoryName());
-                    Log.d("userprofile","Main Category ID==="+res1.getCategoryID());
+                    Log.d("splashresponse","Main Category name==="+res1.getCategoryName());
+                    Log.d("splashresponse","Main Category ID==="+res1.getCategoryID());
                     for(SubCategoryItem item1 : res1.getSubCategory())
                     {
-                        Log.d("userprofile","sub Category name==="+item1.getSubtype());
-                        Log.d("userprofile","sub Category ID==="+item1.getSubtype_id());
-                        Log.d("userprofile","sub Category interest ID==="+item1.getIntrest_id());
+                        Log.d("splashresponse","sub Category name==="+item1.getSubtype());
+                        Log.d("splashresponse","sub Category ID==="+item1.getSubtype_id());
+                        Log.d("splashresponse","sub Category interest ID==="+item1.getIntrest_id());
                     }
                 }*/
                 splashScreenPresentor.setView(this);
@@ -115,7 +115,7 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity implements Splas
             {
                 mHandler.sendEmptyMessageDelayed(START_LOGIN,SPLASH_TIME_OUT);
 
-                Log.d("socialloginresponse"," session value is null===");
+                Log.d("splashresponse"," session value is null===");
             }
         }
     }
@@ -175,6 +175,7 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity implements Splas
     @Override
     public void showSnackBar(String message) {
         Log.d("splashresponse"," showSnackBar called");
+        Log.d("splashresponse"," message  === "+message);
         Snackbar snackbar = Snackbar
                 .make(splashContainer, message, Snackbar.LENGTH_LONG);
         snackbar.show();
@@ -192,15 +193,15 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity implements Splas
 
             switch (msg.what) {
                 case START_DASHBOARD:
-                    Log.d("loginresponse","open dashboard");
+                    Log.d("splashresponse","open dashboard");
                     i.setClass(DoctorSGuideSplashScreen.this, DashBoardActivity.class);
                     break;
                 case START_LOGIN:
-                    Log.d("loginresponse","open SocialLoginActivity");
+                    Log.d("splashresponse","open SocialLoginActivity");
                     i.setClass(DoctorSGuideSplashScreen.this, SocialLoginActivity.class);
                     break;
                 case START_CATEGORY_LIST:
-                    Log.d("loginresponse","open SocialLoginActivity");
+                    Log.d("splashresponse","open SocialLoginActivity");
                     i.setClass(DoctorSGuideSplashScreen.this, CategoryListActivity.class);
                     break;
             }

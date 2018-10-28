@@ -210,7 +210,14 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
 
     @Override
     public Observable<LoginResponse> getUserProfile() {
-        return null;
+        Log.d("userprofile"," getUserProfile called");
+        return caseStudyAPI.getUserProfile().map(new Func1<Response<DataResponse<LoginResponse>>, LoginResponse>() {
+            @Override
+            public LoginResponse call(Response<DataResponse<LoginResponse>> dataResponseResponse) {
+                Log.d("userprofile","respopnse received");
+                return dataResponseResponse.body().getData();
+            }
+        });
     }
 
     @Override
@@ -308,6 +315,7 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
             @Override
             public UserInterestCategoryListResponse call(Response<DataResponse<UserInterestCategoryListResponse>> categoryListResponse) {
                 Log.d("loginresponse","caseStudyList call source");
+                Log.d("loginresponse",categoryListResponse.body().toString());
                 return categoryListResponse.body().getData();
             }
         }).map(new Func1<UserInterestCategoryListResponse, List<CategoryMainItemResponse>>() {
