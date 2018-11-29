@@ -30,8 +30,6 @@
         <activity
             android:name=".home.activity.DashBoardActivity"
             android:theme="@style/DashBoardTheme" />
-
-
         <activity
             android:name=".home.activity.CaseDiscussionDetail"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
@@ -65,8 +63,12 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".home.activity.CategoryListActivity"
-            android:theme="@style/CategoryListTheme" ></activity>
+        <activity
+            android:name=".home.activity.CategoryListActivity"
+            android:theme="@style/CategoryListTheme" />
+        <activity android:name=".home.activity.ViewCategoryListActivity"
+            android:theme="@style/CategoryListTheme"
+            ></activity>
     </application>
 
 </manifest>

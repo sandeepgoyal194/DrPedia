@@ -13,6 +13,7 @@ import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 import com.softmine.drpedia.home.model.CommentData;
 import com.softmine.drpedia.home.model.CommentsListResponse;
 import com.softmine.drpedia.home.model.FeedBackResponse;
+import com.softmine.drpedia.home.model.UploadItemResponse;
 import com.softmine.drpedia.home.model.UserBookmarkListResponse;
 import com.softmine.drpedia.home.net.CaseStudyAPI;
 import com.softmine.drpedia.splash.model.UserInterestCategoryListResponse;
@@ -97,8 +98,6 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
     @Override
     public Observable<String> likeorUnlikeCaseStudy(RequestParams requestParams) {
 
-
-
         Log.d("ItemDetail","image liked in likeorUnlikeCaseStudy  data source view");
         return this.caseStudyAPI.likeCaseStudy(requestParams.getParameters()).map(new Func1<Response<DataResponse<CaseListResponse>>, CaseListResponse>() {
             @Override
@@ -171,21 +170,62 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
     }
 
     @Override
-    public Observable<String> uploadCaseDetail(Map<String, RequestBody> partMap, List<MultipartBody.Part> files) {
+    public Observable<String> uploadCaseDetail(String uploadData) {
         Log.d("uploadlogs","uploadCaseDetail in data source view");
-        Log.d("uploadlogs","data map size==="+partMap.size());
-        Log.d("uploadlogs","list size==="+files.size());
-        return this.caseStudyAPI.uploadcaseDetail(partMap,files).map(new Func1<Response<DataResponse<CaseListResponse>>, CaseListResponse>() {
+        JsonElement element = GsonFactory.getGson().fromJson(uploadData, JsonElement.class);
+        JsonObject jsonObject = element.getAsJsonObject();
+        return this.caseStudyAPI.uploadcaseDetail(jsonObject).map(new Func1<Response<DataResponse<FeedBackResponse>>, FeedBackResponse>() {
             @Override
-            public CaseListResponse call(Response<DataResponse<CaseListResponse>> caseResponseResponse) {
-                Log.d("uploadlogs","comment on post response=="+caseResponseResponse.body().getData().getMessage());
-                return caseResponseResponse.body().getData();
+            public FeedBackResponse call(Response<DataResponse<FeedBackResponse>> feedbackResponse) {
+                Log.d("uploadlogs","comment on post response=="+feedbackResponse.body().getData().getMessage());
+                return feedbackResponse.body().getData();
             }
-        }).map(new Func1<CaseListResponse, String>() {
+        }).map(new Func1<FeedBackResponse, String>() {
             @Override
-            public String call(CaseListResponse caseListResponse) {
+            public String call(FeedBackResponse caseListResponse) {
                 Log.d("uploadlogs","comment on post response=="+caseListResponse.getMessage());
                 return caseListResponse.getMessage();
+            }
+        });
+    }
+
+    @Override
+    public Observable<Integer> uploadCaseImage(List<MultipartBody.Part> files) {
+        return this.caseStudyAPI.uploadCaseImage(files).map(new Func1<Response<DataResponse<UploadItemResponse>>, UploadItemResponse>() {
+            @Override
+            public UploadItemResponse call(Response<DataResponse<UploadItemResponse>> uploadItemResponse) {
+
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.body().getData().getImage_id());
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.body().getData().getMessage());
+                return uploadItemResponse.body().getData();
+            }
+        }).map(new Func1<UploadItemResponse, Integer>() {
+            @Override
+            public Integer call(UploadItemResponse uploadItemResponse) {
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.getImage_id());
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.getMessage());
+                return uploadItemResponse.getImage_id();
+            }
+        });
+    }
+
+
+    @Override
+    public Observable<Integer> uploadCaseVideo(List<MultipartBody.Part> files) {
+        return this.caseStudyAPI.uploadCaseVideo(files).map(new Func1<Response<DataResponse<UploadItemResponse>>, UploadItemResponse>() {
+            @Override
+            public UploadItemResponse call(Response<DataResponse<UploadItemResponse>> uploadItemResponse) {
+
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.body().getData().getImage_id());
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.body().getData().getMessage());
+                return uploadItemResponse.body().getData();
+            }
+        }).map(new Func1<UploadItemResponse, Integer>() {
+            @Override
+            public Integer call(UploadItemResponse uploadItemResponse) {
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.getImage_id());
+                Log.d("uploadimagelogs","comment on post response=="+uploadItemResponse.getMessage());
+                return uploadItemResponse.getImage_id();
             }
         });
     }
@@ -323,6 +363,26 @@ public class GetCaseStudyDataSource implements ICaseStudyDataSource {
             public List<CategoryMainItemResponse> call(UserInterestCategoryListResponse caseListResponse) {
                 Log.d("loginresponse","caseStudyList list return");
                 return caseListResponse.getData();
+            }
+        });
+    }
+
+    @Override
+    public Observable<String> updateUserInterest(String updateUserInterestTypes) {
+        JsonElement element = GsonFactory.getGson().fromJson(updateUserInterestTypes, JsonElement.class);
+        JsonObject jsonObject = element.getAsJsonObject();
+        return this.caseStudyAPI.updateUserInterest(jsonObject).map(new Func1<Response<DataResponse<FeedBackResponse>>, FeedBackResponse>() {
+            @Override
+            public FeedBackResponse call(Response<DataResponse<FeedBackResponse>> feedbackResponse) {
+                Log.d("categoryListItems","like data=="+feedbackResponse.body());
+                Log.d("categoryListItems","like data=="+feedbackResponse.body().getData().getMessage());
+                return feedbackResponse.body().getData();
+            }
+        }).map(new Func1<FeedBackResponse, String>() {
+            @Override
+            public String call(FeedBackResponse feedBackResponse) {
+                Log.d("categoryListItems","like message=="+feedBackResponse.getMessage());
+                return feedBackResponse.getMessage();
             }
         });
     }

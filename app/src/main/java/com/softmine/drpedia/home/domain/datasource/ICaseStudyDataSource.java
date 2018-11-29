@@ -24,7 +24,9 @@ public interface ICaseStudyDataSource {
     Observable<String> bookmarkCaseStudy(RequestParams requestParams);
     Observable<String> uploadCommentOnPost(RequestParams requestParams);
     Observable<List<CommentData>> getListofCommentsOnPost(int postid);
-    Observable<String> uploadCaseDetail(Map<String, RequestBody> partMap, List<MultipartBody.Part> files);
+    Observable<String> uploadCaseDetail(String uploadData);
+    Observable<Integer> uploadCaseImage(List<MultipartBody.Part> files);
+    Observable<Integer> uploadCaseVideo(List<MultipartBody.Part> files);
     Observable<List<CaseItem>> getCaseItemDetail(int postId);
     Observable<LoginResponse> getUserProfile();
     Observable<LoginResponse> updateUserProfile(String userid , String userData);
@@ -32,4 +34,5 @@ public interface ICaseStudyDataSource {
     Observable<List<CategoryMainItemResponse>> categoryList();
     Observable<String> createUserInterest(String userInterestTypes);
     Observable<List<CategoryMainItemResponse>> getUserInterestCount();
+    Observable<String> updateUserInterest(String updateUserInterestTypes);
 }

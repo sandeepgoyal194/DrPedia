@@ -76,7 +76,7 @@ public class ChildCheckController {
   /**
    * @return list of indexes of all checked child items
    */
-  public List<Integer> getCheckedPositions() {
+  public List<Integer>  getCheckedPositions() {
     List<Integer> selected = new ArrayList<>();
     for (int i = 0; i < expandableList.groups.size(); i++)
     {

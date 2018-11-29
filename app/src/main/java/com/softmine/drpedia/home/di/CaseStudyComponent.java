@@ -2,6 +2,7 @@ package com.softmine.drpedia.home.di;
 
 
 import com.softmine.drpedia.home.activity.CategoryListActivity;
+import com.softmine.drpedia.home.activity.ViewCategoryListActivity;
 import com.softmine.drpedia.home.fragment.CaseDiscussionDetailFragment;
 import com.softmine.drpedia.home.fragment.DashBoardFragment;
 import com.softmine.drpedia.home.fragment.FeedbackFragment;
@@ -25,6 +26,7 @@ public interface CaseStudyComponent{
     void inject(CaseDiscussionDetailFragment caseDiscussionDetailFragment);
     void inject(UploadCaseFragment uploadCaseFragment);
     void inject(CategoryListActivity categoryListActivity);
+    void inject(ViewCategoryListActivity viewCategoryListActivity);
     void inject(Profile profile);
     void inject(EditProfile editProfile);
     void inject(UploadService service);

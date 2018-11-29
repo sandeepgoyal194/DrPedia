@@ -7,6 +7,7 @@ import com.softmine.drpedia.home.model.CaseListResponse;
 import com.softmine.drpedia.home.model.CategoryListResponse;
 import com.softmine.drpedia.home.model.CommentsListResponse;
 import com.softmine.drpedia.home.model.FeedBackResponse;
+import com.softmine.drpedia.home.model.UploadItemResponse;
 import com.softmine.drpedia.home.model.UserBookmarkListResponse;
 import com.softmine.drpedia.splash.model.UserInterestCategoryListResponse;
 
@@ -55,10 +56,21 @@ public interface CaseStudyAPI {
 
     @GET("comment/{postid}")
     public Observable<Response<DataResponse<CommentsListResponse>>> ListofCommentsOnPost(@Path("postid") String postid);
-
+/*
     @Multipart
     @POST("posts/create")
-    public Observable<Response<DataResponse<CaseListResponse>>> uploadcaseDetail(@PartMap() Map<String, RequestBody> partMap, @Part List<MultipartBody.Part> files);
+    public Observable<Response<DataResponse<CaseListResponse>>> uploadcaseDetail(@PartMap() Map<String, RequestBody> partMap, @Part List<MultipartBody.Part> files);*/
+
+    @POST("posts/create")
+    public Observable<Response<DataResponse<FeedBackResponse>>> uploadcaseDetail(@Body JsonObject jsonObject);
+
+    @Multipart
+    @POST("posts/uploadImage")
+    public Observable<Response<DataResponse<UploadItemResponse>>> uploadCaseImage(@Part List<MultipartBody.Part> file);
+
+    @Multipart
+    @POST("posts/uploadVideo")
+    public Observable<Response<DataResponse<UploadItemResponse>>> uploadCaseVideo(@Part List<MultipartBody.Part> files);
 
     @GET("posts/post/{postid}")
     public Observable<Response<DataResponse<CaseListResponse>>> getCaseItemDetail(@Path("postid") String postid);
@@ -74,6 +86,9 @@ public interface CaseStudyAPI {
 
     @POST("/intrests/create")
     public Observable<Response<DataResponse<FeedBackResponse>>> createUserInterest(@Body JsonObject jsonObject );
+
+    @PUT("/intrests/edit")
+    public Observable<Response<DataResponse<FeedBackResponse>>> updateUserInterest(@Body JsonObject jsonObject );
 
     @GET("intrests")
     public Observable<Response<DataResponse<UserInterestCategoryListResponse>>> getUserInterestCategoryList();

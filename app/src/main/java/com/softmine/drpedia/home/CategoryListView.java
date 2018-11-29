@@ -10,4 +10,5 @@ public interface CategoryListView extends IView {
 
     public void updateCategoryList(List<CategoryMainItemResponse> categoryMainItemList);
     public void startActivity();
+    public void startProfileActivity();
 }

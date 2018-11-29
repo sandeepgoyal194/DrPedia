@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +42,8 @@ import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 import com.softmine.drpedia.home.presentor.UploadCasePresentor;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -318,7 +321,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     }
 
     @Override
-    public String getCaseType() {
+    public String getCaseTitle() {
         return this.caseType.getText().toString();
     }
 
@@ -358,7 +361,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     }
 
     @Override
-    public String getImageType()
+    public String getInterestType()
     {
         return "1";
     }
@@ -493,6 +496,12 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                     }
                     mediaItemListAdapter.setMediaItemList(mediaItemList);
                     typeContainer.setVisibility(View.VISIBLE);
+
+                    Bitmap bmThumbnail = createThumbnailFromPath(videoUriList.get(0) , MediaStore.Video.Thumbnails.MINI_KIND);
+                    saveBitmap(bmThumbnail);
+
+
+
                 }
                 catch(Exception e)
                 {
@@ -501,6 +510,21 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
 
             }
         }
+    }
+
+    public static File saveBitmap(Bitmap bmp) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+        File f = new File(Environment.getExternalStorageDirectory()
+                + File.separator + "testimage.jpg");
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+        Log.d("savebitmap",f.getAbsolutePath());
+        Log.d("savebitmap",f.getName());
+        Log.d("savebitmap",f.getPath());
+        return f;
     }
 
     public void  setImage(String path) {

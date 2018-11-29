@@ -42,4 +42,5 @@
     <string name="upload_success">Upload completed successfully in [[ELAPSED_TIME]]</string>
     <string name="upload_error">Error while uploading</string>
     <string name="upload_cancelled">Upload has been cancelled</string>
+    <string name="no_interest_category">No category Selected by user as of now</string>
 </resources>

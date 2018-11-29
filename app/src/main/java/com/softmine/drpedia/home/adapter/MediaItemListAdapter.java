@@ -454,6 +454,9 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
 
                     videoContainer.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
+
+
+
                   //  bvp.start();
                    // bvp.pause();
                 }

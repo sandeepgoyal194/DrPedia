@@ -18,13 +18,13 @@ public interface CaseUploadView extends IView{
 
     String getCaseDesc();
 
-    String getCaseType();
+    String getCaseTitle();
 
     UploadNotificationConfig getNotificationConfig(@StringRes int title);
 
     List<String> getDataUri();
 
-    String getImageType();
+    String getInterestType();
 
     void onCaseTypeEmpty();
 

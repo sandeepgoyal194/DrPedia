@@ -69,12 +69,20 @@ public class GetCaseStudyDataRepository implements ICaseStudyRepository {
     }
 
     @Override
-    public Observable<String> uploadCaseDetail(Map<String, RequestBody> partMap, List<MultipartBody.Part> files) {
-        Log.d("uploadlogs","uploadCaseDetail in repo view");
-        Log.d("uploadlogs","data map size==="+partMap.size());
-        Log.d("uploadlogs","list size==="+files.size());
+    public Observable<String> uploadCaseDetail(String uploadData) {
 
-        return this.getCaseStudyDataFactory.createCaseStudyDataSource().uploadCaseDetail(partMap,files);
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().uploadCaseDetail(uploadData);
+    }
+
+    @Override
+    public Observable<Integer> uploadCaseImage(List<MultipartBody.Part> files) {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().uploadCaseImage(files);
+    }
+
+
+    @Override
+    public Observable<Integer> uploadCaseVideo(List<MultipartBody.Part> files) {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().uploadCaseVideo(files);
     }
 
     @Override
@@ -106,6 +114,11 @@ public class GetCaseStudyDataRepository implements ICaseStudyRepository {
     @Override
     public Observable<String> createUserInterest(String userInterestTypes) {
         return this.getCaseStudyDataFactory.createCaseStudyDataSource().createUserInterest(userInterestTypes);
+    }
+
+    @Override
+    public Observable<String> updateUserInterest(String updateUserInterestTypes) {
+        return this.getCaseStudyDataFactory.createCaseStudyDataSource().updateUserInterest(updateUserInterestTypes);
     }
 
     @Override

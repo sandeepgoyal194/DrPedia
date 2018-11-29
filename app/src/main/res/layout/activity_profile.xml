@@ -168,6 +168,13 @@
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/dividerDob">
 
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="@style/ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
                 <LinearLayout
                     android:id="@+id/no_interest_data_container"
                     android:visibility="gone"

@@ -6,12 +6,17 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.RingtoneManager;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
@@ -23,7 +28,12 @@ import com.softmine.drpedia.home.notification.UploadNotificationStatusConfig;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,7 +41,14 @@ import frameworks.AppBaseApplication;
 import frameworks.network.model.ResponseException;
 import frameworks.network.usecases.RequestParams;
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+import static android.app.NotificationManager.*;
 
 public class UploadService extends Service {
 
@@ -110,7 +127,7 @@ public class UploadService extends Service {
             }
 
             if (notificationManager.getNotificationChannel(notificationChannelId) == null) {
-                NotificationChannel channel = new NotificationChannel(notificationChannelId, "Upload Service channel", NotificationManager.IMPORTANCE_LOW);
+                NotificationChannel channel = new NotificationChannel(notificationChannelId, "Upload Service channel", IMPORTANCE_LOW);
                 notificationManager.createNotificationChannel(channel);
             }
         }
@@ -120,10 +137,95 @@ public class UploadService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    public Observable<String> uploadPostData(UploadTaskParameters params, List<Integer> attachmentList)
+    {
+        Log.d("uploadimagelogs" , "get3 called  ");
+        Log.d("uploadimagelogs" , "params list=== ");
+        Log.d("uploadimagelogs" , "case type id=== "+params.caseCategory);
+        Log.d("uploadimagelogs" , "params case title=== "+params.caseTitle);
+        Log.d("uploadimagelogs" , "params case description=== "+params.caseDesc);
+        Log.d("uploadimagelogs" , "params uploaded ids list=== ");
+        for(Integer id : attachmentList)
+        {
+            Log.d("uploadimagelogs" , "id ==  "+id);
+        }
+
+        RequestParams requestParams =   UploadCaseDetailUseCase.createRequestParams(params.caseCategory,params.caseTitle,params.caseDesc, (ArrayList<Integer>) attachmentList);
+        return this.uploadCaseDetailUseCase.createObservable(requestParams);
+    }
+
+
+    public Observable<Integer> uploadAttachments(String uri)
+    {
+        String fileType;
+        Log.d("uploadimagelogs" , "get2 called  ");
+        Log.d("uploadimagelogs" , "uri===  "+uri);
+
+        fileType = getFileType(uri);
+
+        if(fileType.equalsIgnoreCase("image"))
+        {
+            Log.d("uploadimagelogs" , "uploading image");
+            RequestParams requestParams = UploadCaseDetailUseCase.createImageUploadRequestParams(uri);
+           return this.uploadCaseDetailUseCase.createImageUploadObservable(requestParams);
+        }
+        else if (fileType.equalsIgnoreCase("video"))
+        {
+            Log.d("uploadimagelogs" , "uploading video");
+            File thumbnailPath = null;
+            Bitmap bmThumbnail = createThumbnailFromPath(uri , MediaStore.Video.Thumbnails.MINI_KIND);
+            try {
+                thumbnailPath = saveBitmap(bmThumbnail);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            RequestParams requestParams = UploadCaseDetailUseCase.createVideoUploadRequestParams(uri , thumbnailPath.getAbsolutePath());
+            return this.uploadCaseDetailUseCase.createVideoUploadObservable(requestParams);
+        }
+        return  Observable.empty();
+    }
+
+
     private void executeRequest(UploadTaskParameters params)
     {
         final UploadNotificationConfig notificationConfig = params.notificationConfig;
-        RequestParams requestParams =   UploadCaseDetailUseCase.createRequestParams(params.caseCategory,params.caseTitle,params.caseDesc,params.attachmentList);
+
+        Observable.from(params.attachmentList)
+                .flatMap(new Func1<String, Observable<Integer>>() {
+                    @Override
+                    public Observable<Integer> call(String s) {
+                        Observable<Integer> nu = uploadAttachments(s);
+                        Log.d("uploadimagelogs","id   "+nu);
+                        updateNotification(params.notificationConfig.getProgress());
+                        return nu;
+                    }
+                })
+                .toList()
+                .flatMap(list -> uploadPostData(params , list))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("uploadimagelogs" , "onCompleted");
+                        updateNotification(notificationConfig.getCompleted());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("uploadimagelogs" , "onError");
+                        e.printStackTrace();
+                        updateNotification(notificationConfig.getError());
+                    }
+
+                    @Override
+                    public void onNext(String strings) {
+
+                        Log.d("uploadimagelogs" , "onNext");
+                        Log.d("uploadimagelogs" , ""+strings);
+                    }
+                });
+/*
         this.uploadCaseDetailUseCase.execute(requestParams,new Subscriber<String>() {
             @Override
             public void onCompleted() {
@@ -187,7 +289,7 @@ public class UploadService extends Service {
                // UploadCasePresentor.this.caseUploadView.setUploadResult(commentData);
 
             }
-        });
+        });*/
     }
 
 
@@ -258,6 +360,38 @@ public class UploadService extends Service {
             stopForeground(true);
 
         stopSelf();
+    }
+
+
+    public String getFileType(String fileUri)
+    {
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileUri.toString());
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+
+        Log.d("uploadimagelogs" , "getFileType called  ");
+        Log.d("uploadimagelogs" , "full type ===  "+mimeType);
+        Log.d("uploadimagelogs" , "exact file type ===  "+mimeType.substring(0,mimeType.indexOf("/")));
+        String fileType = mimeType.substring(0,mimeType.indexOf("/"));
+        return fileType;
+    }
+
+    public Bitmap createThumbnailFromPath(String filePath, int type){
+        return ThumbnailUtils.createVideoThumbnail(filePath, type);
+    }
+
+    public static File saveBitmap(Bitmap bmp) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+        File f = new File(Environment.getExternalStorageDirectory()
+                + File.separator + "testimage.jpg");
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+        Log.d("uploadimagelogs","file AbsolutePath"+f.getAbsolutePath());
+        Log.d("uploadimagelogs","file name "+f.getName());
+        Log.d("uploadimagelogs","file path "+f.getPath());
+        return f;
     }
 
 

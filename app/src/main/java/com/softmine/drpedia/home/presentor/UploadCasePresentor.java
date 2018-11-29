@@ -65,19 +65,19 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
     public void uploadCaseDetails() {
 
 
-        String caseType;
+        String caseTitle;
         String caseDesc;
         ArrayList<String> attachmentList;
-        String imageType;
+        String interestType;
 
-        caseType = this.caseUploadView.getCaseType();
+        caseTitle = this.caseUploadView.getCaseTitle();
         caseDesc = this.caseUploadView.getCaseDesc();
         attachmentList = (ArrayList<String>) this.caseUploadView.getDataUri();
-        imageType = this.caseUploadView.getImageType();
+        interestType = this.caseUploadView.getInterestType();
 
-        params.caseTitle = caseType;
+        params.caseTitle = caseTitle;
         params.caseDesc = caseDesc;
-        params.caseCategory = imageType;
+        params.caseCategory = interestType;
         params.attachmentList = attachmentList;
 
         params.notificationConfig = this.caseUploadView.getNotificationConfig(R.string.multipart_upload);

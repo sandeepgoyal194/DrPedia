@@ -12,5 +12,6 @@ public interface IProfileView extends IView{
     public void onProfileSyncedSuccessfully(User user);
     public void onProfileSyncFailed();
     public void setUserInterestSize(List<CategoryMainItemResponse> categoryMainItemResponses);
-
+    public void showProgressBar1();
+    public void hideProgressBar1();
 }

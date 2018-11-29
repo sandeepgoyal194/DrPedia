@@ -9,7 +9,14 @@ public class SubCategoryItem implements  Parcelable {
 
     int subtype_id;
 
-    protected SubCategoryItem(Parcel in) {
+    public SubCategoryItem(int id , String type)
+    {
+        subtype_id = id;
+        subtype = type;
+    }
+
+
+    public SubCategoryItem(Parcel in) {
         subtype_id = in.readInt();
         subtype = in.readString();
     }

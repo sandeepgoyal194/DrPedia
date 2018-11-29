@@ -7,6 +7,8 @@ import android.webkit.MimeTypeMap;
 
 
 import com.softmine.drpedia.home.domain.repositry.ICaseStudyRepository;
+import com.softmine.drpedia.home.model.UploadCaseDetail;
+import com.softmine.drpedia.utils.GsonFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +30,10 @@ public class UploadCaseDetailUseCase extends UseCase<String> {
     public static final String caseTypeTxt = "casetype";
     public static final String caseTypeIDTxt = "casetypeid";
     public static final String caseDescTxt= "casedesc";
-    public static final String caseUriListTxt= "caseurilist";
+    public static final String caseUploadedIDsListTxt= "caseUploadedIDsListTxt";
+    public static final String caseImageUriTxt= "caseimageuritxt";
+    public static final String caseVideoUriTxt= "casevideouritxt";
+    public static final String caseThumbnailUriTxt= "casethumbnailuritxt";
     private final ICaseStudyRepository getCaseRepo;
 
    static RequestBody requestCaseType;
@@ -49,6 +54,8 @@ public class UploadCaseDetailUseCase extends UseCase<String> {
     @Override
     public Observable<String> createObservable(RequestParams requestParams) {
 
+        UploadCaseDetail uploadCaseDetail = new UploadCaseDetail();
+
         String caseTypeId = requestParams.getString(caseTypeIDTxt,null);
         requestCaseTypeID = createPartFromString(caseTypeId);
 
@@ -58,46 +65,86 @@ public class UploadCaseDetailUseCase extends UseCase<String> {
         String caseDesc = requestParams.getString(caseDescTxt,null);
         requestCaseDesc = createPartFromString(caseDesc);
 
-        dataMap.put("postType_id", requestCaseTypeID);
-        dataMap.put("short_description", requestCaseType);
-        dataMap.put("long_description", requestCaseDesc);
+        ArrayList<Integer> uriList = (ArrayList<Integer>) requestParams.getObject(caseUploadedIDsListTxt);
 
-        Log.d("uploadlogs","case type ID in createObservable=="+caseTypeId);
-        Log.d("uploadlogs","case title createObservable=="+caseType);
-        Log.d("uploadlogs","case desc createObservable=="+caseDesc);
+        uploadCaseDetail.setSubtype_id(caseTypeId);
+        uploadCaseDetail.setShort_description(caseType);
+        uploadCaseDetail.setLong_description(caseDesc);
+        uploadCaseDetail.setUpload_item_id(uriList);
 
-        ArrayList<String> uriList = (ArrayList<String>) requestParams.getObject(caseUriListTxt);
-        Log.d("uploadlogs","case uri list size in createObservable=="+uriList.size());
+        String uploadData = GsonFactory.getGson().toJson(uploadCaseDetail);
 
-        for(String uri : uriList)
-        {
-            Log.d("uploadlogs","called uri item in createObservable==");
-            parts.add(prepareFilePart("image",Uri.fromFile(new File(uri))));
-        }
-
-        Log.d("uploadlogs","data map size==="+dataMap.size());
-        Log.d("uploadlogs","list size==="+parts.size());
-
-        return this.getCaseRepo.uploadCaseDetail(dataMap,parts);
+        return this.getCaseRepo.uploadCaseDetail(uploadData);
     }
+
+    public static RequestParams createRequestParams(String caseTypeID , String caseType , String caseDesc , ArrayList<Integer> uploaded_item_id) {
+
+        RequestParams requestParams = RequestParams.create();
+        requestParams.putString(caseTypeIDTxt,caseTypeID);
+        requestParams.putString(caseTypeTxt,caseType);
+        requestParams.putString(caseDescTxt,caseDesc);
+        requestParams.putObject(caseUploadedIDsListTxt,uploaded_item_id);
+        return requestParams;
+    }
+
+    public Observable<Integer> createImageUploadObservable(RequestParams requestParams) {
+
+        parts.clear();
+
+        String uriTxt = (String) requestParams.getObject(caseImageUriTxt);
+        parts.add(prepareFilePart("image",Uri.fromFile(new File(uriTxt))));
+        return this.getCaseRepo.uploadCaseImage(parts);
+    }
+
+    public static RequestParams createImageUploadRequestParams(String uri)
+    {
+        RequestParams requestParams = RequestParams.create();
+        requestParams.putString(caseImageUriTxt,uri);
+        return requestParams;
+    }
+
+    public Observable<Integer> createVideoUploadObservable(RequestParams requestParams) {
+
+        parts.clear();
+
+        String videoUriTxt = (String) requestParams.getObject(caseVideoUriTxt);
+        String thumbnailUriTxt = (String) requestParams.getObject(caseThumbnailUriTxt);
+
+        parts.add(prepareFilePart("video",Uri.fromFile(new File(videoUriTxt))));
+        parts.add(prepareFilePart("thumbnail",Uri.fromFile(new File(thumbnailUriTxt))));
+
+        return this.getCaseRepo.uploadCaseVideo(parts);
+    }
+
+    public static RequestParams createVideoUploadRequestParams(String videoUri , String thumbnailUri)
+    {
+        Log.d("uploadimagelogs" , "creating video params ");
+        Log.d("uploadimagelogs" , "video uri  "+videoUri);
+        Log.d("uploadimagelogs" , "thumbnail uri  "+thumbnailUri);
+
+        RequestParams requestParams = RequestParams.create();
+        requestParams.putString(caseVideoUriTxt,videoUri);
+        requestParams.putString(caseThumbnailUriTxt,thumbnailUri);
+        return requestParams;
+    }
+
 
     @NonNull
     private MultipartBody.Part prepareFilePart(String partName, Uri fileUri) {
 
         File file = new File(fileUri.getPath());
-        Log.d("uploadlogs","file path=="+fileUri.toString());
-        Log.d("uploadlogs","file path=="+fileUri.getPath());
+        Log.d("uploadimagelogs","file path=="+fileUri.toString());
+        Log.d("uploadimagelogs","file path=="+fileUri.getPath());
 
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileUri.toString());
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
-        Log.d("uploadlogs","file type=="+mimeType);
+        Log.d("uploadimagelogs","file type=="+mimeType);
 
         RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
-        Log.d("uploadlogs","request filed");
+        Log.d("uploadimagelogs","request filed");
 
         return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
     }
-
 
     @NonNull
     private RequestBody createPartFromString(String string) {
@@ -105,15 +152,6 @@ public class UploadCaseDetailUseCase extends UseCase<String> {
     }
 
 
-    public static RequestParams createRequestParams(String caseTypeID , String caseType , String caseDesc , ArrayList<String> uriList) {
-
-        RequestParams requestParams = RequestParams.create();
-        requestParams.putString(caseTypeIDTxt,caseTypeID);
-        requestParams.putString(caseTypeTxt,caseType);
-        requestParams.putString(caseDescTxt,caseDesc);
-        requestParams.putObject(caseUriListTxt,uriList);
-        return requestParams;
-    }
 
 
 }

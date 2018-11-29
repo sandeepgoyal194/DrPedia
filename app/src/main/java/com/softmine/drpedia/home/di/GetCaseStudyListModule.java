@@ -78,6 +78,8 @@ public class GetCaseStudyListModule {
     OkHttpClient provideOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, AppSessionManager appSessionManager) {
         return new OkHttpClient.Builder()
                 .connectTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(2 , TimeUnit.MINUTES)
+                .writeTimeout(2 , TimeUnit.MINUTES)
                 .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor(new RequestInterceptor(appSessionManager))
                 .addInterceptor(new ErrorResponseInterceptor(BaseResponseError.class))
