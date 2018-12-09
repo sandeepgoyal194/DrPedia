@@ -65,9 +65,6 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     private static final String TYPE_IMAGE_TXT = "IMAGE";
     private static final String TYPE_UPLOAD = "TYPE";
 
-
-
-
     ByteArrayOutputStream byteBuff;
     @Inject
     UploadCasePresentor uploadCasePresentor;
@@ -497,8 +494,8 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                     mediaItemListAdapter.setMediaItemList(mediaItemList);
                     typeContainer.setVisibility(View.VISIBLE);
 
-                    Bitmap bmThumbnail = createThumbnailFromPath(videoUriList.get(0) , MediaStore.Video.Thumbnails.MINI_KIND);
-                    saveBitmap(bmThumbnail);
+//                    Bitmap bmThumbnail = createThumbnailFromPath(videoUriList.get(0) , MediaStore.Video.Thumbnails.MINI_KIND);
+ //                   saveBitmap(bmThumbnail);
 
 
 

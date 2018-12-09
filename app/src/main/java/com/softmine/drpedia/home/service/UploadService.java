@@ -310,6 +310,7 @@ public class UploadService extends Service {
                 .setWhen(notificationCreationTimeMillis)
                 .setContentTitle(statusConfig.title)
                 .setContentText(statusConfig.message)
+                .setContentIntent(statusConfig.getClickIntent(this))
                 .setSmallIcon(statusConfig.iconResourceID)
                 .setLargeIcon(statusConfig.largeIcon)
                 .setColor(statusConfig.iconColorResourceID)
@@ -337,6 +338,9 @@ public class UploadService extends Service {
 
     }
 
+
+
+
     private void updateNotification(UploadNotificationStatusConfig statusConfig)
     {
         if (params.notificationConfig == null) return;
@@ -352,6 +356,7 @@ public class UploadService extends Service {
                 .setLargeIcon(statusConfig.largeIcon)
                 .setColor(statusConfig.iconColorResourceID)
                 .setGroup(UploadService.NAMESPACE)
+                .setProgress(100, 0, true)
                 .setOngoing(false);
         setRingtone(notification);
 

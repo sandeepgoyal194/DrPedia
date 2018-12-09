@@ -1,6 +1,8 @@
 package com.softmine.drpedia.home.notification;
 
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,6 +20,16 @@ public class UploadNotificationStatusConfig implements Parcelable {
 
     public int iconColorResourceID = NotificationCompat.COLOR_DEFAULT;
     public PendingIntent clickIntent = null;
+
+
+    final public PendingIntent getClickIntent(Context context) {
+        if (clickIntent == null) {
+            return PendingIntent.getBroadcast(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        return clickIntent;
+    }
+
     public boolean clearOnAction = false;
     public ArrayList<UploadNotificationAction> actions = new ArrayList<>(3);
 

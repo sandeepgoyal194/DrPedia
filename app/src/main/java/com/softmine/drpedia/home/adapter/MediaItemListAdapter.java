@@ -230,7 +230,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
     }
 
 
-    class CategoryHolder extends RecyclerView.ViewHolder implements Player.EventListener {
+    class CategoryHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.case_image)
         ImageView mediaImage;
@@ -246,21 +246,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         @BindView(R.id.case_playIcon)
         ImageView casePlayIcon;
 
-        @BindView(R.id.player_view)
-        PlayerView mPlayerView;
-
-        private SimpleExoPlayer player;
-        private DefaultTrackSelector trackSelector;
-        private boolean shouldAutoPlay;
-        private BandwidthMeter bandwidthMeter;
-
-        private boolean playWhenReady;
-        private int currentWindow;
-        private long playbackPosition;
-
-        @BindView(R.id.videoContainer)
-        RelativeLayout videoContainer;
-
         @BindView(R.id.progress_bar)
         ProgressBar bar;
 
@@ -271,13 +256,7 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
             super(itemView);
             ButterKnife.bind(this,itemView);
             mView = itemView;
-            player = null;
-            playWhenReady = true;
-            currentWindow = 0;
-            playbackPosition = 0;
-            shouldAutoPlay = false;
-            bandwidthMeter = new DefaultBandwidthMeter();
-            initializePlayer();
+
             bar.setVisibility(View.VISIBLE);
         }
 
@@ -400,7 +379,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                         loadExternalImageWithTransformation(caseMediaItem);
                     }
                     mediaImage.setVisibility(View.VISIBLE);
-                    videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
                   //  bar.setVisibility(View.GONE);
@@ -417,7 +395,6 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                         loadImageFromUrlWithTransformation(caseMediaItem);
                     }
                     mediaImage.setVisibility(View.VISIBLE);
-                    videoContainer.setVisibility(View.GONE);
                     thumbview.setVisibility(View.GONE);
                     casePlayIcon.setVisibility(View.GONE);
                 }
@@ -434,28 +411,33 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                 if(caseMediaItem.getSrc()!=null)
                 {
                     Log.d("hrview","video source "+caseMediaItem.getSrc());
-                    /*glide.with(mView.getContext())
-                            .load(caseMediaItem.getVideo())
+                    Uri uri = Uri.fromFile(new File(caseMediaItem.getVideo()));
+
+                    glide.with(mView.getContext())
+                            .load(uri)
                             .centerCrop()
                             .crossFade()
                             .into(thumbview);
 
-                   *//* Bitmap bmThumbnail = createThumbnailFromPath(caseMediaItem.getVideo(), MediaStore.Video.Thumbnails.MINI_KIND);
-                    thumbview.setImageBitmap(bmThumbnail);*//*
                     thumbview.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
-                    mediaImage.setVisibility(View.GONE);*/
-
-                  //  bvp.setAutoPlay(false);
-                  //  bvp.setSource( Uri.fromFile(new File(caseMediaItem.getVideo())));
-                    Log.d("hrview","file video source "+Uri.fromFile(new File(caseMediaItem.getVideo())).toString());
-                    MediaSource mediaSource = buildFileMediaSource(Uri.fromFile(new File(caseMediaItem.getVideo())));
-                    preparePlayer(mediaSource);
-
-                    videoContainer.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
 
 
+                   /* Bitmap bmThumbnail = createThumbnailFromPath(caseMediaItem.getVideo(), MediaStore.Video.Thumbnails.MINI_KIND);
+                    thumbview.setImageBitmap(bmThumbnail);*//*
+                   */
+
+                  //  bvp.setAutoPlay(false);
+                  //  bvp.setSource( Uri.fromFile(new File(caseMediaItem.getVideo())));
+//                    Log.d("hrview","file video source "+Uri.fromFile(new File(caseMediaItem.getVideo())).toString());
+//                    MediaSource mediaSource = buildFileMediaSource(Uri.fromFile(new File(caseMediaItem.getVideo())));
+//                    preparePlayer(mediaSource);
+//
+//                    videoContainer.setVisibility(View.VISIBLE);
+//                    mediaImage.setVisibility(View.GONE);
+//
+                    bar.setVisibility(View.GONE);
 
                   //  bvp.start();
                    // bvp.pause();
@@ -463,6 +445,19 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                 else
                 {
                     Log.d("hrview","video source "+caseMediaItem.getSrc());
+
+                    glide.with(mView.getContext())
+                            .load(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getThumbnail()))
+                            .centerCrop()
+                            .crossFade()
+                            .into(thumbview);
+
+                    thumbview.setVisibility(View.VISIBLE);
+                    casePlayIcon.setVisibility(View.VISIBLE);
+                    mediaImage.setVisibility(View.GONE);
+                    bar.setVisibility(View.GONE);
+
+
                    /* ThumbnailDownloader.download(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()).toString(),thumbview , this.getAdapterPosition());
                     thumbview.setVisibility(View.VISIBLE);
                     casePlayIcon.setVisibility(View.VISIBLE);
@@ -470,119 +465,18 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
                   //  bvp.setAutoPlay(false);
                   //  bvp.setSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
 
+/*
                     MediaSource mediaSource = buildMediaSource(Uri.parse(CaseStudyAPIURL.BASE_URL_image_load+caseMediaItem.getVideo()));
                     preparePlayer(mediaSource);
                     videoContainer.setVisibility(View.VISIBLE);
                     mediaImage.setVisibility(View.GONE);
+*/
                   //  bvp.start();
                    // bvp.pause();
                 }
             }
         }
 
-        private void initializePlayer() {
-            mPlayerView.requestFocus();
-            TrackSelection.Factory videoTrackSelectionFactory =
-                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
-
-            trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-
-            player = ExoPlayerFactory.newSimpleInstance(mView.getContext(), trackSelector);
-
-            mPlayerView.setPlayer(player);
-
-            player.setPlayWhenReady(shouldAutoPlay);
-
-          player.addListener(this);
-
-        }
-
-        private  void preparePlayer(MediaSource mediaSource)
-        {
-            boolean haveStartPosition = currentWindow != C.INDEX_UNSET;
-            if (haveStartPosition) {
-
-                if(player!=null)
-                player.seekTo(currentWindow, playbackPosition);
-            }
-
-            player.prepare(mediaSource, !haveStartPosition, false);
-        }
-
-        private MediaSource buildMediaSource(Uri uri) {
-            return new ExtractorMediaSource.Factory(
-                    new DefaultHttpDataSourceFactory("exoplayer-codelab")).
-                    createMediaSource(uri);
-        }
-
-        private MediaSource buildFileMediaSource(Uri uri) {
-            return new ExtractorMediaSource.Factory(
-                    new DefaultDataSourceFactory(mView.getContext(), Util.getUserAgent(mView.getContext(), "mediaPlayerSample"),(TransferListener<? super DataSource>) bandwidthMeter)).
-                    createMediaSource(uri);
-        }
-
-        @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-            Log.d("bufferupdate" , "onTimelineChanged "+reason);
-            if(reason>0)
-                bar.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-        }
-
-        @Override
-        public void onLoadingChanged(boolean isLoading) {
-            Log.d("bufferupdate" , "loading changed "+isLoading);
-        }
-
-        @Override
-        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (playbackState == Player.STATE_BUFFERING){
-                bar.setVisibility(View.VISIBLE);
-                Log.d("bufferupdate" , "position  "+player.getBufferedPosition());
-                Log.d("bufferupdate" , "percentage  "+player.getBufferedPercentage());
-            } else {
-                Log.d("bufferupdate" , "state  else "+playbackState);
-                Log.d("bufferupdate" , "position  else "+player.getBufferedPosition());
-                Log.d("bufferupdate" , "percentage  else "+player.getBufferedPercentage());
-                bar.setVisibility(View.INVISIBLE);
-                casePlayIcon.setVisibility(View.VISIBLE);
-                //mPlayerView.findViewById(R.id.exo_play).setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onRepeatModeChanged(int repeatMode) {
-
-        }
-
-        @Override
-        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
-        }
-
-        @Override
-        public void onPlayerError(ExoPlaybackException error) {
-
-        }
-
-        @Override
-        public void onPositionDiscontinuity(int reason) {
-
-        }
-
-        @Override
-        public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-        }
-
-        @Override
-        public void onSeekProcessed() {
-            Log.d("bufferupdate", "onSeekProcessed");
-        }
     }
 }
 

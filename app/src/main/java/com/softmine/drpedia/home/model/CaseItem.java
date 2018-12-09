@@ -117,6 +117,15 @@ public class CaseItem implements Serializable{
 
     private String created_on;
 
+    public String getSubtype_name() {
+        return subtype_name;
+    }
+
+    public void setSubtype_name(String subtype_name) {
+        this.subtype_name = subtype_name;
+    }
+
+    private String subtype_name;
 
 
 }
