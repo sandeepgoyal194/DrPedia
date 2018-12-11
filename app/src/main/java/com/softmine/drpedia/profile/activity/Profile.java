@@ -88,6 +88,9 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
 
     List<String> TAGS1;
 
+    @BindView(R.id.edit_interest)
+    ImageView edit_interest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -294,7 +297,8 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
             }
             hashtagView2.setVisibility(View.VISIBLE);
             hashtagView2.setData(TAGS1, HASH);
-            hashtagView2.setOnClickListener(new View.OnClickListener() {
+
+            edit_interest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(Profile.this, ViewCategoryListActivity.class);

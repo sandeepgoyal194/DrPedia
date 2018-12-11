@@ -33,7 +33,8 @@
         <activity
             android:name=".home.activity.CaseDiscussionDetail"
             android:theme="@style/AppTheme.ActionBar.Transparent" />
-        <activity android:name=".home.activity.UploadCaseActivity" />
+        <activity android:name=".home.activity.UploadCaseActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".login.view.FacebookLoginActivity"
             android:screenOrientation="portrait"

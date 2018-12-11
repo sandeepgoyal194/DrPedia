@@ -15,18 +15,16 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.di.DaggerCaseStudyComponent;
 import com.softmine.drpedia.home.di.GetCaseStudyListModule;
 import com.softmine.drpedia.home.domain.usecases.UploadCaseDetailUseCase;
 import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 import com.softmine.drpedia.home.notification.UploadNotificationStatusConfig;
-
-import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,11 +36,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import frameworks.AppBaseApplication;
-import frameworks.network.model.ResponseException;
 import frameworks.network.usecases.RequestParams;
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -52,6 +47,8 @@ import static android.app.NotificationManager.*;
 
 public class UploadService extends Service {
 
+    static final public String UPLOAD_RESULT = "com.softmine.drpedia.home.service.REQUEST_UPLOAD_COMPLETED";
+    static final public String UPLOAD_MSG = "com.softmine.drpedia.home.service.REQUEST_UPLOAD_MESSAGE";
     private CaseStudyComponent caseStudyComponent;
     public static final String PARAM_TASK_CLASS = "taskClass";
     protected UploadTaskParameters params = null;
@@ -66,6 +63,8 @@ public class UploadService extends Service {
     @Inject
     UploadCaseDetailUseCase uploadCaseDetailUseCase;
 
+    LocalBroadcastManager broadcaster;
+
     @Inject
     public UploadService() {
     }
@@ -75,6 +74,7 @@ public class UploadService extends Service {
         super.onCreate();
         Log.d("MyService","service onCreate called  ");
         this.initializeInjector();
+        broadcaster = LocalBroadcastManager.getInstance(this);
         this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
@@ -97,6 +97,17 @@ public class UploadService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    public String checkFileExtension(String filePath)
+    {
+        File file = new File(filePath);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.toString());
+        Log.d("MyService","file extension "+fileExtension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+        Log.d("MyService","file mimeType "+mimeType);
+        return mimeType;
+    }
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -111,7 +122,18 @@ public class UploadService extends Service {
         Log.d("MyService","case category "+params.caseCategory);
 
         for(String file : params.attachmentList)
-        Log.d("MyService","file path "+file);
+        {
+            Log.d("MyService","file path "+file);
+            String fileType = checkFileExtension(file);
+            if(fileType.substring(0,fileType.indexOf("/")).equals("image"))
+            {
+                Log.d("MyService","file type image");
+            }
+            else if(fileType.substring(0,fileType.indexOf("/")).equals("video"))
+            {
+                Log.d("MyService","file type video");
+            }
+        }
 
         if(uploadCaseDetailUseCase!=null)
             Log.d("MyService","object not null ");
@@ -196,7 +218,7 @@ public class UploadService extends Service {
                     public Observable<Integer> call(String s) {
                         Observable<Integer> nu = uploadAttachments(s);
                         Log.d("uploadimagelogs","id   "+nu);
-                        updateNotification(params.notificationConfig.getProgress());
+                        updateNotificationProgress(params.notificationConfig.getProgress());
                         return nu;
                     }
                 })
@@ -208,14 +230,14 @@ public class UploadService extends Service {
                     @Override
                     public void onCompleted() {
                         Log.d("uploadimagelogs" , "onCompleted");
-                        updateNotification(notificationConfig.getCompleted());
+                        uploadCompleteNotification(notificationConfig.getCompleted());
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d("uploadimagelogs" , "onError");
                         e.printStackTrace();
-                        updateNotification(notificationConfig.getError());
+                        updateErrorNotification(notificationConfig.getError());
                     }
 
                     @Override
@@ -298,8 +320,6 @@ public class UploadService extends Service {
     }
 
 
-
-
     private void createNotification()
     {
         if (params.notificationConfig == null || params.notificationConfig.getProgress().message == null) return;
@@ -310,7 +330,6 @@ public class UploadService extends Service {
                 .setWhen(notificationCreationTimeMillis)
                 .setContentTitle(statusConfig.title)
                 .setContentText(statusConfig.message)
-                .setContentIntent(statusConfig.getClickIntent(this))
                 .setSmallIcon(statusConfig.iconResourceID)
                 .setLargeIcon(statusConfig.largeIcon)
                 .setColor(statusConfig.iconColorResourceID)
@@ -338,10 +357,67 @@ public class UploadService extends Service {
 
     }
 
+    private void updateNotificationProgress(UploadNotificationStatusConfig statusConfig)
+    {
+        if (params.notificationConfig == null || params.notificationConfig.getProgress().message == null) return;
+
+      //  UploadNotificationStatusConfig statusConfig = params.notificationConfig.getProgress();
+        notificationCreationTimeMillis = System.currentTimeMillis();
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, params.notificationConfig.getNotificationChannelId())
+                .setWhen(notificationCreationTimeMillis)
+                .setContentTitle(statusConfig.title)
+                .setContentText(statusConfig.message)
+                .setSmallIcon(statusConfig.iconResourceID)
+                .setLargeIcon(statusConfig.largeIcon)
+                .setColor(statusConfig.iconColorResourceID)
+                .setGroup(UploadService.NAMESPACE)
+                .setProgress(100, 0, true)
+                .setOngoing(true);
+        Notification builtNotification = notification.build();
+        if (!isExecuteInForeground())
+        {
+            notificationManager.notify(notificationId, builtNotification);
+        }
+        else
+        {
+            startForeground(UPLOAD_NOTIFICATION_BASE_ID, builtNotification);
+            notificationManager.cancel(notificationId);
+        }
+    }
+
+    private void uploadCompleteNotification(UploadNotificationStatusConfig statusConfig)
+    {
+        if (params.notificationConfig == null) return;
+        notificationManager.cancel(notificationId);
+        // UploadNotificationStatusConfig statusConfig = params.notificationConfig.getCompleted();
+        if (statusConfig.message == null) return;
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, params.notificationConfig.getNotificationChannelId())
+                .setWhen(notificationCreationTimeMillis)
+                .setContentTitle(statusConfig.title)
+                .setContentText(statusConfig.message)
+                .setContentIntent(statusConfig.getUploadCompleteClickIntent(this, params))
+                .setAutoCancel(statusConfig.clearOnAction)
+                .setSmallIcon(statusConfig.iconResourceID)
+                .setLargeIcon(statusConfig.largeIcon)
+                .setColor(statusConfig.iconColorResourceID)
+                .setGroup(UploadService.NAMESPACE)
+                .setOngoing(false);
+        setRingtone(notification);
+
+        notificationManager.notify(notificationId + 1, notification.build());
+        if(isExecuteInForeground())
+            stopForeground(true);
+
+        Intent intent = new Intent(UPLOAD_RESULT);
+        intent.putExtra(UPLOAD_MSG,"completed");
+        broadcaster.sendBroadcast(intent);
+
+        stopSelf();
+    }
 
 
 
-    private void updateNotification(UploadNotificationStatusConfig statusConfig)
+    private void updateErrorNotification(UploadNotificationStatusConfig statusConfig)
     {
         if (params.notificationConfig == null) return;
         notificationManager.cancel(notificationId);
@@ -351,12 +427,12 @@ public class UploadService extends Service {
                 .setWhen(notificationCreationTimeMillis)
                 .setContentTitle(statusConfig.title)
                 .setContentText(statusConfig.message)
+                .setContentIntent(statusConfig.getUploadErrorClickIntent(this, params))
                 .setAutoCancel(statusConfig.clearOnAction)
                 .setSmallIcon(statusConfig.iconResourceID)
                 .setLargeIcon(statusConfig.largeIcon)
                 .setColor(statusConfig.iconColorResourceID)
                 .setGroup(UploadService.NAMESPACE)
-                .setProgress(100, 0, true)
                 .setOngoing(false);
         setRingtone(notification);
 

@@ -1,6 +1,7 @@
 package com.softmine.drpedia.home.activity;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +11,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 
 
 import com.softmine.drpedia.R;
@@ -19,6 +23,10 @@ import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.di.DaggerCaseStudyComponent;
 import com.softmine.drpedia.home.di.GetCaseStudyListModule;
 import com.softmine.drpedia.home.fragment.UploadCaseFragment;
+import com.softmine.drpedia.home.service.UploadService;
+import com.softmine.drpedia.home.service.UploadTaskParameters;
+
+import java.io.File;
 
 import frameworks.AppBaseApplication;
 import frameworks.di.component.HasComponent;
@@ -27,12 +35,16 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
 
     private CaseStudyComponent caseStudyComponent;
     final int MY_PERMISSIONS_REQUEST_READ_MEDIA=1;
+
+    protected UploadTaskParameters params = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_case);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -41,12 +53,44 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
 
         }
         toolbar.setTitle(R.string.app_name);
-        this.addFragment(savedInstanceState);
+        this.params = getIntent().getParcelableExtra(UploadService.PARAM_TASK_PARAMETERS);
+     /*   if(this.params!=null) {
+            Log.d("UploadFragmentLog", "params size  " + params.attachmentList.size());
+            Log.d("UploadFragmentLog", "case title " + params.caseTitle);
+            Log.d("UploadFragmentLog", "case title " + params.caseTitle);
+            Log.d("UploadFragmentLog", "case desc " + params.caseDesc);
+            Log.d("UploadFragmentLog", "case category " + params.caseCategory);
+
+
+            for(String file : params.attachmentList)
+            {
+                String fileType = checkFileExtension(file);
+                if(fileType.substring(0,fileType.indexOf("/")).equals("image"))
+                {
+                    Log.d("UploadFragmentLog","file type image");
+                }
+                else if(fileType.substring(0,fileType.indexOf("/")).equals("video"))
+                {
+                    Log.d("UploadFragmentLog","file type video");
+                }
+            }
+        }*/
+        this.addFragment(savedInstanceState , this.params);
         this.initializeInjector();
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_MEDIA);
         }
+    }
+
+    public String checkFileExtension(String filePath)
+    {
+        File file = new File(filePath);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.toString());
+        Log.d("UploadFragmentLog","file extension "+fileExtension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+        Log.d("UploadFragmentLog","file mimeType "+mimeType);
+        return mimeType;
     }
 
     @Override
@@ -62,11 +106,19 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
         }
     }
 
-    private void addFragment(Bundle savedInstanceState)
+    private void addFragment(Bundle savedInstanceState, UploadTaskParameters params)
     {
+
         if (savedInstanceState == null) {
+            Fragment uploadCaseFragment = new UploadCaseFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(UploadService.PARAM_TASK_PARAMETERS , params);
+            uploadCaseFragment.setArguments(bundle);
+
             FragmentTransaction fragmentTransaction = this.getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.upload_case_fragment_container,new UploadCaseFragment());;
+            fragmentTransaction.add(R.id.upload_case_fragment_container,uploadCaseFragment);
+
             fragmentTransaction.commit();
         }
     }

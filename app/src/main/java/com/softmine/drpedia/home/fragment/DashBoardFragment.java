@@ -1,11 +1,14 @@
 package com.softmine.drpedia.home.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +27,7 @@ import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.model.CaseItem;
 import com.softmine.drpedia.home.model.CaseMediaItem;
 import com.softmine.drpedia.home.presentor.CaseListPresentor;
+import com.softmine.drpedia.home.service.UploadService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,6 +70,8 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
     @BindView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
 
+    BroadcastReceiver receiver;
+
     public DashBoardFragment() {
         // Required empty public constructor
         setRetainInstance(true);
@@ -77,6 +83,13 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
         Log.d("loginresponse","onCreate called");
         super.onCreate(savedInstanceState);
         this.getComponent(CaseStudyComponent.class).inject(this);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s = intent.getStringExtra(UploadService.UPLOAD_MSG);
+                loadCaseStudyList();
+            }
+        };
     }
 
     @Override
@@ -132,6 +145,7 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
 
         super.onStart();
         Log.d("loginresponse","onStart fragment");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver((receiver), new IntentFilter(UploadService.UPLOAD_RESULT));
     }
 
     @Override
@@ -150,6 +164,7 @@ public class DashBoardFragment extends Fragment implements CaseListView, SwipeRe
         // caseListAdapter=null;
         // caseListPresentor=null;
         //this.caseListAdapter.setUsersCollection(null);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
 
     @Override

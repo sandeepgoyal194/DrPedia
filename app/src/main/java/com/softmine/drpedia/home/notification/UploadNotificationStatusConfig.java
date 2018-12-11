@@ -8,6 +8,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 
+import com.softmine.drpedia.home.activity.DashBoardActivity;
+import com.softmine.drpedia.home.activity.UploadCaseActivity;
+import com.softmine.drpedia.home.service.UploadService;
+import com.softmine.drpedia.home.service.UploadTaskParameters;
+
 import java.util.ArrayList;
 
 public class UploadNotificationStatusConfig implements Parcelable {
@@ -21,10 +26,27 @@ public class UploadNotificationStatusConfig implements Parcelable {
     public int iconColorResourceID = NotificationCompat.COLOR_DEFAULT;
     public PendingIntent clickIntent = null;
 
+    Intent intent = new Intent();
 
-    final public PendingIntent getClickIntent(Context context) {
+    final public PendingIntent getUploadCompleteClickIntent(Context context, UploadTaskParameters params) {
         if (clickIntent == null) {
-            return PendingIntent.getBroadcast(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(context , DashBoardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        return clickIntent;
+    }
+
+
+    final public PendingIntent getUploadErrorClickIntent(Context context, UploadTaskParameters params) {
+        if (clickIntent == null) {
+            Intent intent = new Intent(context , UploadCaseActivity.class);
+            intent.putExtra(UploadService.PARAM_TASK_PARAMETERS, params);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
         return clickIntent;

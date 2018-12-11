@@ -64,7 +64,6 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
     @Override
     public void uploadCaseDetails() {
 
-
         String caseTitle;
         String caseDesc;
         ArrayList<String> attachmentList;

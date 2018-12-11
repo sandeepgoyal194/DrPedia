@@ -23,12 +23,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.bumptech.glide.Glide;
 import com.softmine.drpedia.R;
@@ -40,6 +42,8 @@ import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.model.CaseMediaItem;
 import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 import com.softmine.drpedia.home.presentor.UploadCasePresentor;
+import com.softmine.drpedia.home.service.UploadService;
+import com.softmine.drpedia.home.service.UploadTaskParameters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,6 +73,8 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     @Inject
     UploadCasePresentor uploadCasePresentor;
 
+    protected UploadTaskParameters params = null;
+
     @BindView(R.id.rl_progress)
     RelativeLayout rl_progress;
 
@@ -81,7 +87,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     View fragmentView;
 
     @BindView(R.id.uploadContainer)
-    RelativeLayout container;
+    ScrollView container;
 
     final int CASE_UPLOAD_REQUEST_CODE=101;
     final int CASE_UPLOAD_RESPONSE_OK=102;
@@ -128,6 +134,17 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
         //setRetainInstance(true);
     }
 
+
+    public String checkFileExtension(String filePath)
+    {
+        File file = new File(filePath);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.toString());
+        Log.d("UploadFragmentLog","file extension "+fileExtension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+        Log.d("UploadFragmentLog","file mimeType "+mimeType);
+        return mimeType;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -137,6 +154,29 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
         uriList = new ArrayList<>();
         imageUriList = new ArrayList<>();
         videoUriList = new ArrayList<>();
+        Bundle bundle = getArguments();
+        this.params = bundle.getParcelable(UploadService.PARAM_TASK_PARAMETERS);
+
+        if(this.params!=null) {
+            Log.d("UploadFragmentLog", "params size  " + params.attachmentList.size());
+            Log.d("UploadFragmentLog", "case title " + params.caseTitle);
+            Log.d("UploadFragmentLog", "case title " + params.caseTitle);
+            Log.d("UploadFragmentLog", "case desc " + params.caseDesc);
+            Log.d("UploadFragmentLog", "case category " + params.caseCategory);
+
+            for(String file : params.attachmentList)
+            {
+                String fileType = checkFileExtension(file);
+                if(fileType.substring(0,fileType.indexOf("/")).equals("image"))
+                {
+                    Log.d("UploadFragmentLog","file type image");
+                }
+                else if(fileType.substring(0,fileType.indexOf("/")).equals("video"))
+                {
+                    Log.d("UploadFragmentLog","file type video");
+                }
+            }
+        }
       //  setHasOptionsMenu(true);
     }
 
@@ -181,7 +221,47 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
      /*   mediaController= new MediaController(getActivity());
         mediaController.setAnchorView(videoView);
 */
+
+        if(this.params!=null) {
+            Log.d("UploadFragmentLog", "params size  " + params.attachmentList.size());
+            Log.d("UploadFragmentLog", "case title " + params.caseTitle);
+            Log.d("UploadFragmentLog", "case title " + params.caseTitle);
+            Log.d("UploadFragmentLog", "case desc " + params.caseDesc);
+            Log.d("UploadFragmentLog", "case category " + params.caseCategory);
+
+            this.caseDesc.setText(params.caseDesc);
+            this.caseType.setText(params.caseTitle);
+
+            for(String file : params.attachmentList)
+            {
+                String fileType = checkFileExtension(file);
+                uriList.add(file);
+                if(fileType.substring(0,fileType.indexOf("/")).equals("image"))
+                {
+                    Log.d("UploadFragmentLog","file type image");
+                    CaseMediaItem item = new CaseMediaItem();
+                    item.setImage(file);
+                    item.setSrc("storage");
+                    mediaItemList.add(item);
+                }
+                else if(fileType.substring(0,fileType.indexOf("/")).equals("video"))
+                {
+                    Log.d("UploadFragmentLog","file type video");
+                    CaseMediaItem item = new CaseMediaItem();
+                    item.setVideo(file);
+                    item.setSrc("storage");
+                    mediaItemList.add(item);
+                }
+            }
+        }
+
         mediaItemListAdapter =  new MediaItemListAdapter(getActivity());
+        if(this.params!=null)
+        {
+            mediaItemListAdapter.setMediaItemList(mediaItemList);
+            typeContainer.setVisibility(View.VISIBLE);
+        }
+
         rc_view.setAdapter(mediaItemListAdapter);
         return fragmentView;
     }
@@ -417,14 +497,14 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                 try
                 {
                     ArrayList<String> strings = data.getStringArrayListExtra("mydata");
-                    Log.d("datasize", "selected size: " + strings.size());
-                    Log.d("datasize", "Selected Items: " + strings.toString());
+                    Log.d("attachmedia", "selected size: " + strings.size());
+                    Log.d("attachmedia", "Selected Items: " + strings.toString());
                     imageUriList.clear();
-                    Log.d("datasize", "image uri list size: " + imageUriList.size());
+                    Log.d("attachmedia", "image uri list size: " + imageUriList.size());
                     imageUriList.addAll(strings);
-                    Log.d("datasize", "image uri list size: " + imageUriList.size());
+                    Log.d("attachmedia", "image uri list size: " + imageUriList.size());
                     uriList.addAll(imageUriList);
-                    Log.d("datasize", "total list size: " + uriList.size());
+                    Log.d("attachmedia", "total list size: " + uriList.size());
                     //mediaItemList.clear();
                     for(String url :imageUriList)
                     {
@@ -432,7 +512,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                         item.setImage(url);
                         item.setSrc("storage");
                         mediaItemList.add(item);
-                        Log.d("datasize","url==="+url);
+                        Log.d("attachmedia","url==="+url);
                     }
                     mediaItemListAdapter.setMediaItemList(mediaItemList);
                     typeContainer.setVisibility(View.VISIBLE);
@@ -474,14 +554,14 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                 try
                 {
                     ArrayList<String> strings = data.getStringArrayListExtra("mydata");
-                    Log.d("datasize", "size: " + strings.size());
-                    Log.d("datasize", "Selected Items: " + strings.toString());
+                    Log.d("attachmedia", "size: " + strings.size());
+                    Log.d("attachmedia", "Selected Items: " + strings.toString());
                     videoUriList.clear();
-                    Log.d("datasize", "video uri list size: " + videoUriList.size());
+                    Log.d("attachmedia", "video uri list size: " + videoUriList.size());
                     videoUriList.addAll(strings);
-                    Log.d("datasize", "video uri list size: " + videoUriList.size());
+                    Log.d("attachmedia", "video uri list size: " + videoUriList.size());
                     uriList.addAll(videoUriList);
-                    Log.d("datasize", "Total list size: " + uriList.size());
+                    Log.d("attachmedia", "Total list size: " + uriList.size());
                 //    mediaItemList.clear();
                     for(String url :videoUriList)
                     {
@@ -489,7 +569,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                         item.setVideo(url);
                         item.setSrc("storage");
                         mediaItemList.add(item);
-                        Log.d("datasize","url==="+url);
+                        Log.d("attachmedia","url==="+url);
                     }
                     mediaItemListAdapter.setMediaItemList(mediaItemList);
                     typeContainer.setVisibility(View.VISIBLE);
@@ -629,6 +709,9 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
         {
             case R.id.menu_itm_signup:
                 uploadCasePresentor.uploadCaseDetails();
+                Log.d("killactivity","activity killed");
+                getActivity().finish();
+                Log.d("killactivity","activity killed1");
                 break;
         }
         return super.onOptionsItemSelected(item);

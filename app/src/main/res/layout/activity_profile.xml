@@ -165,8 +165,8 @@
 
             <android.support.v7.widget.CardView
                 style="@style/Card"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/dividerDob">
+                android:layout_below="@+id/dividerDob"
+                android:layout_marginTop="10dp">
 
 
                 <ProgressBar
@@ -177,9 +177,9 @@
 
                 <LinearLayout
                     android:id="@+id/no_interest_data_container"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/no_interest_data"
@@ -191,17 +191,38 @@
 
                 </LinearLayout>
 
-                <com.greenfrvr.hashtagview.HashtagView
-                    android:id="@+id/hashtags2"
-                    android:visibility="gone"
-                    style="@style/HashtagView"
-                    app:tagBackground="@drawable/item_bg_1"
-                    app:tagForeground="@drawable/flat_button_light"
-                    app:tagPaddingBottom="@dimen/padding_vertical"
-                    app:tagPaddingLeft="@dimen/padding_horizontal"
-                    app:tagPaddingRight="@dimen/padding_horizontal"
-                    app:tagPaddingTop="@dimen/padding_vertical"
-                    app:tagTextColor="#E5E5E5" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <ImageView
+                        android:id="@+id/edit_interest"
+                        android:layout_width="20dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/pencil" />
+
+
+                    <com.greenfrvr.hashtagview.HashtagView
+                        android:id="@+id/hashtags2"
+                        style="@style/HashtagView"
+                        android:layout_below="@+id/edit_interest"
+                        android:visibility="gone"
+                        app:tagBackground="@drawable/item_bg_1"
+                        app:tagForeground="@drawable/flat_button_light"
+                        app:tagPaddingBottom="@dimen/padding_vertical"
+                        app:tagPaddingLeft="@dimen/padding_horizontal"
+                        app:tagPaddingRight="@dimen/padding_horizontal"
+                        app:tagPaddingTop="@dimen/padding_vertical"
+                        app:tagTextColor="#E5E5E5" />
+
+
+                </RelativeLayout>
+
 
             </android.support.v7.widget.CardView>
 
