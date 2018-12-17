@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/home_screen_background"
     tools:context="com.softmine.drpedia.home.fragment.UploadCaseFragment">
 
     <android.support.design.widget.AppBarLayout

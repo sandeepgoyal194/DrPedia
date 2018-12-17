@@ -7,6 +7,7 @@ import android.webkit.MimeTypeMap;
 
 
 import com.softmine.drpedia.home.domain.repositry.ICaseStudyRepository;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 import com.softmine.drpedia.home.model.UploadCaseDetail;
 import com.softmine.drpedia.utils.GsonFactory;
 
@@ -150,8 +151,6 @@ public class UploadCaseDetailUseCase extends UseCase<String> {
     private RequestBody createPartFromString(String string) {
         return RequestBody.create(MediaType.parse("text/plain"), string);
     }
-
-
 
 
 }

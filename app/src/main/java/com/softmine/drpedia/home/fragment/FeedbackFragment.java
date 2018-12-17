@@ -71,11 +71,7 @@ public class FeedbackFragment extends Fragment implements IFeedbackView, Materia
         fragmentView =  inflater.inflate(R.layout.activity_feedback, container, false);
         ButterKnife.bind(this, fragmentView);
         some_array = getResources().getStringArray(R.array.feedback_activity_titles);
-        /*ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.feedback_activity_titles, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);*/
 
-        //type_spinner.setAdapter(adapter);
         type_spinner.setItems(some_array);
         type_spinner.setOnItemSelectedListener(this);
         return fragmentView;

@@ -216,13 +216,22 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
                for(final SubCategoryItem subItem : item.getSubCategory())
                {
                   // if(user_interest_list.stream().anyMatch(str -> str.trim().equals(subItem.getSubtype())))
-                   if(user_interest_id_list.stream().anyMatch(str -> str.equals(subItem.getSubtype_id())))
+
+                   for(Integer str : user_interest_id_list)
+                   {
+                       if(str==subItem.getSubtype_id())
+                       {
+                           childIndex.add(inner);
+                       }
+                   }
+
+                  /* if(user_interest_id_list.stream().anyMatch(str -> str.equals(subItem.getSubtype_id())))
                    {
                        Log.d("categoryListItems" , "group id is   "+item.getCategoryName());
                        Log.d("categoryListItems" , "child id is   "+subItem.getSubtype());
                        //compare.put(outer , inner);
                        childIndex.add(inner);
-                   }
+                   }*/
                    inner++;
                }
                 compare.put(outer , childIndex);
@@ -322,6 +331,7 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
        // adapter.onRestoreInstanceState(savedInstanceState);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void printPos()
     {
@@ -352,14 +362,28 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
         ArrayList<Integer> added_interest = new ArrayList<>();
         for(Integer latest_interest : update_category_SubType_list)
         {
-            if(user_interest_id_list.stream().anyMatch(str -> str.equals(latest_interest)))
+            boolean flag=true;
+            for(Integer str : user_interest_id_list)
+            {
+                if(str==latest_interest)
+                {
+                    user_interest_id_list.remove(latest_interest);
+                    flag=false;
+                    break;
+                }
+            }
+            if(flag)
+            {
+                added_interest.add(latest_interest);
+            }
+           /* if(user_interest_id_list.stream().anyMatch(str -> str.equals(latest_interest)))
             {
                 user_interest_id_list.remove(latest_interest);
             }
             else
             {
                 added_interest.add(latest_interest);
-            }
+            }*/
         }
 
         Log.d("categoryListItems","Added interest");

@@ -31,8 +31,10 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.CaseUploadView;
 import com.softmine.drpedia.home.activity.MultiPhotoSelectActivity;
@@ -40,6 +42,8 @@ import com.softmine.drpedia.home.adapter.MediaItemListAdapter;
 import com.softmine.drpedia.home.customview.CaseMediaItemHorizontalRecyclerView;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
 import com.softmine.drpedia.home.model.CaseMediaItem;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
+import com.softmine.drpedia.home.model.SubCategoryItem;
 import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 import com.softmine.drpedia.home.presentor.UploadCasePresentor;
 import com.softmine.drpedia.home.service.UploadService;
@@ -60,7 +64,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import frameworks.di.component.HasComponent;
 
-public class UploadCaseFragment extends Fragment implements CaseUploadView {
+public class UploadCaseFragment extends Fragment implements CaseUploadView, MaterialSpinner.OnItemSelectedListener {
 
     private static final int IMAGE_REQUEST_CODE = 100;
     private static final int VIDEO_REQUEST_CODE = 101;
@@ -83,11 +87,14 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     @BindView(R.id.postDesc)
     EditText caseDesc;
 
+    @BindView(R.id.interest_type_spinner)
+    MaterialSpinner type_spinner;
+
     String imageType;
     View fragmentView;
 
     @BindView(R.id.uploadContainer)
-    ScrollView container;
+    RelativeLayout container;
 
     final int CASE_UPLOAD_REQUEST_CODE=101;
     final int CASE_UPLOAD_RESPONSE_OK=102;
@@ -123,12 +130,19 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
 
     Glide glide;
 
+    String[] some_array;
+
+    List<String> TAGS1;
+    ArrayList<Integer> user_interest_list;
+
     @BindView(R.id.horizontal_recycler_view)
     CaseMediaItemHorizontalRecyclerView rc_view;
 
     MediaItemListAdapter mediaItemListAdapter ;
 
     List<CaseMediaItem> mediaItemList= new ArrayList<>();
+
+    int selected_interest_type;
 
     public UploadCaseFragment() {
         //setRetainInstance(true);
@@ -154,6 +168,8 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
         uriList = new ArrayList<>();
         imageUriList = new ArrayList<>();
         videoUriList = new ArrayList<>();
+        TAGS1 = new ArrayList<>();
+        user_interest_list = new ArrayList<>();
         Bundle bundle = getArguments();
         this.params = bundle.getParcelable(UploadService.PARAM_TASK_PARAMETERS);
 
@@ -189,6 +205,9 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
         fragmentView =  inflater.inflate(R.layout.upload_case_item, container, false);
         ButterKnife.bind(this,fragmentView);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        //some_array = getResources().getStringArray(R.array.feedback_activity_titles);
+
+
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -232,6 +251,8 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
             this.caseDesc.setText(params.caseDesc);
             this.caseType.setText(params.caseTitle);
 
+            this.selected_interest_type = Integer.parseInt(params.caseCategory);
+            Log.d("userprofile", "selected interest type ID" +  this.selected_interest_type);
             for(String file : params.attachmentList)
             {
                 String fileType = checkFileExtension(file);
@@ -264,6 +285,12 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
 
         rc_view.setAdapter(mediaItemListAdapter);
         return fragmentView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uploadCasePresentor.getUserInterest();
     }
 
     @OnClick(R.id.expandSheetArrow)
@@ -440,7 +467,38 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
     @Override
     public String getInterestType()
     {
-        return "1";
+        return Integer.toString(selected_interest_type);
+    }
+
+
+    @Override
+    public void setUserInterestSize(List<CategoryMainItemResponse> categoryMainItemResponses) {
+        TAGS1.clear();
+        user_interest_list.clear();
+        if(categoryMainItemResponses.size()>0) {
+            for (CategoryMainItemResponse res1 : categoryMainItemResponses) {
+               // Log.d("userprofile", "Main Category name===" + res1.getCategoryName());
+              //  Log.d("userprofile", "Main Category ID===" + res1.getCategoryID());
+
+                for (SubCategoryItem item1 : res1.getSubCategory()) {
+                    TAGS1.add(item1.getSubtype());
+                    user_interest_list.add(item1.getSubtype_id());
+                    Log.d("userprofile", "sub Category name===" + item1.getSubtype());
+                    Log.d("userprofile", "sub Category ID===" + item1.getSubtype_id());
+                    //Log.d("userprofile", "sub Category interest ID===" + item1.getIntrest_id());
+                }
+            }
+        }
+        type_spinner.setItems(TAGS1);
+        type_spinner.setOnItemSelectedListener(this);
+
+        if(params!=null)
+        {
+            int index = user_interest_list.indexOf(selected_interest_type);
+            type_spinner.setSelectedIndex(index);
+            Log.d("userprofile", "selected interest type " +  TAGS1.get(index));
+        }
+
     }
 
     @Override
@@ -715,5 +773,15 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+         selected_interest_type = user_interest_list.get(view.getSelectedIndex());
+
+        Toast.makeText(view.getContext(),
+                "Type id : " + selected_interest_type + " type name :  "+TAGS1.get(view.getSelectedIndex()),
+                Toast.LENGTH_SHORT).show();
+        type_spinner.setSelectedIndex(view.getSelectedIndex());
     }
 }

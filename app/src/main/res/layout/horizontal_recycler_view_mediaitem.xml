@@ -10,14 +10,14 @@
         android:src="@drawable/loading"
         />
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingLeft="5dp"
         android:paddingTop="2dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/horizontal_recycler_view_item"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal"
             android:scrollbarSize="3dp">
@@ -33,8 +33,9 @@
             android:background="@color/list_header_color"
             android:gravity="center"
             android:text="This is regarding Dentist procedure"
-
+            android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:layout_alignParentLeft="true" />
     </RelativeLayout>
 </FrameLayout>

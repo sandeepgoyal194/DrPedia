@@ -13,13 +13,17 @@ import com.softmine.drpedia.exception.ErrorMessageFactory;
 import com.softmine.drpedia.exception.NetworkConnectionException;
 import com.softmine.drpedia.home.CaseUploadView;
 import com.softmine.drpedia.home.domain.usecases.UploadCaseDetailUseCase;
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 import com.softmine.drpedia.home.service.UploadService;
 import com.softmine.drpedia.home.service.UploadTaskParameters;
+import com.softmine.drpedia.profile.domain.usecases.UserInterestUseCase;
+import com.softmine.drpedia.splash.presentor.SplashScreenPresentor;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,11 +36,13 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
 
     CaseUploadView caseUploadView;
     private UploadCaseDetailUseCase uploadCaseDetailUseCase;
+    private UserInterestUseCase userInterestUseCase;
     protected UploadTaskParameters params = new UploadTaskParameters();
     @Inject
-    public UploadCasePresentor(UploadCaseDetailUseCase uploadCaseDetailUseCase)
+    public UploadCasePresentor(UploadCaseDetailUseCase uploadCaseDetailUseCase , UserInterestUseCase userInterestUseCase)
     {
         this.uploadCaseDetailUseCase = uploadCaseDetailUseCase;
+        this.userInterestUseCase = userInterestUseCase;
     }
 
     public void setView(@NonNull CaseUploadView view) {
@@ -189,6 +195,74 @@ public class UploadCasePresentor implements ICaseUploadPresentor {
         }
 */
     }
+
+    @Override
+    public void getUserInterest() {
+        Log.d("splashresponse"," getUserInterest called");
+        this.caseUploadView.showProgressBar();
+        this.userInterestUseCase.execute(RequestParams.EMPTY, new Subscriber<List<CategoryMainItemResponse>>() {
+            @Override
+            public void onCompleted() {
+                 UploadCasePresentor.this.caseUploadView.hideProgressBar();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("splashresponse"," onError called");
+                UploadCasePresentor.this.caseUploadView.hideProgressBar();
+                e.printStackTrace();
+                if(e instanceof IOException)
+                {
+                    if(e instanceof HttpException)
+                    {
+                        Log.d("splashresponse","exception code  "+((HttpException)e).code());
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof ResponseException)
+                    {
+                        Log.d("splashresponse","ResponseException");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof NetworkConnectionException)
+                    {
+                        Log.d("splashresponse","NetworkConnectionExceptions");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
+                    }
+                    else
+                    {
+                        Log.d("splashresponse", "other issue");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                }
+                else
+                {
+                    if(e instanceof JSONException) {
+                        Log.d("splashresponse", "Json Parsing exception");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else if(e instanceof HttpException)
+                    {
+                        Log.d("splashresponse", "Http exception issue");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                    else
+                    {
+                        Log.d("splashresponse", "other issue");
+                        UploadCasePresentor.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+                    }
+                }
+            }
+
+            @Override
+            public void onNext(List<CategoryMainItemResponse> categoryMainItemResponses) {
+                Log.d("splashresponse", "onNext called");
+                UploadCasePresentor.this.caseUploadView.setUserInterestSize(categoryMainItemResponses);
+            }
+        });
+    }
+
+
+
 
 
 }

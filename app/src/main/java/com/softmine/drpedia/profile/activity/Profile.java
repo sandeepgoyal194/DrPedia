@@ -24,6 +24,7 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.DoctorGuideBaseActivity;
 import com.softmine.drpedia.R;
+import com.softmine.drpedia.home.activity.CategoryListActivity;
 import com.softmine.drpedia.home.activity.ViewCategoryListActivity;
 import com.softmine.drpedia.home.di.ActivityModule;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
@@ -83,11 +84,8 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    List<String> TAGS = Arrays.asList("cupcake", "donut", "eclair", "froyo",
-            "gingerbread", "honeycomb", "icecreamsandwich", "jellybean", "kitkat", "lollipop", "marshmallow");
-
     List<String> TAGS1;
-
+    ArrayList<Integer> user_interest_list;
     @BindView(R.id.edit_interest)
     ImageView edit_interest;
 
@@ -115,6 +113,7 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
     protected void onStart() {
         super.onStart();
         TAGS1 = new ArrayList<>();
+        user_interest_list = new ArrayList<>();
         hashtagView2.setData(TAGS1, HASH);
         profilePresentor.setView(this);
     }
@@ -170,6 +169,7 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
 
         List<CategoryMainItemResponse> res = user.getData();
         TAGS1.clear();
+        user_interest_list.clear();
         if(res!=null)
         {
             Log.d("userprofile"," category size==="+res.size());
@@ -180,6 +180,7 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
                 for(SubCategoryItem item1 : res1.getSubCategory())
                 {
                     TAGS1.add(item1.getSubtype());
+                    user_interest_list.add(item1.getSubtype_id());
                     Log.d("userprofile","sub Category name==="+item1.getSubtype());
                     Log.d("userprofile","sub Category ID==="+item1.getSubtype_id());
                     Log.d("userprofile","sub Category interest ID==="+item1.getIntrest_id());
@@ -250,8 +251,6 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
     }
 
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile_edit, menu);
@@ -282,6 +281,7 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
     public void setUserInterestSize(List<CategoryMainItemResponse> categoryMainItemResponses) {
 
         TAGS1.clear();
+        user_interest_list.clear();
         if(categoryMainItemResponses.size()>0)
         {
             for(CategoryMainItemResponse res1 : categoryMainItemResponses) {
@@ -290,6 +290,7 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
 
                 for (SubCategoryItem item1 : res1.getSubCategory()) {
                     TAGS1.add(item1.getSubtype());
+                    user_interest_list.add(item1.getSubtype_id());
                     Log.d("userprofile", "sub Category name===" + item1.getSubtype());
                     Log.d("userprofile", "sub Category ID===" + item1.getSubtype_id());
                     Log.d("userprofile", "sub Category interest ID===" + item1.getIntrest_id());
@@ -301,16 +302,32 @@ public class Profile extends DoctorGuideBaseActivity implements IProfileView {
             edit_interest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(Profile.this, ViewCategoryListActivity.class);
-                    startActivity(i);
+                    Intent i = new Intent(Profile.this, CategoryListActivity.class);
+                    i.putExtra("interest_request_type","2");
+                    i.putStringArrayListExtra("user_interest_list", (ArrayList<String>) TAGS1);
+                    i.putIntegerArrayListExtra("user_interest_id_list",user_interest_list);
+                    startActivityForResult(i , CategoryListActivity.update_interest_code);
                 }
             });
         }
         else
         {
+            edit_interest.setVisibility(View.GONE);
             no_interest_data_container.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CategoryListActivity.update_interest_code)
+        {
+            if(resultCode == CategoryListActivity.update_interest_response_code)
+            {
+                profilePresentor.getUserInterest();
+            }
+        }
     }
 
 

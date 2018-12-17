@@ -5,4 +5,5 @@ public interface ICaseUploadPresentor {
     void selectCaseImage();
     void selectCaseVideo();
     void uploadCaseDetails();
+    public void getUserInterest();
 }

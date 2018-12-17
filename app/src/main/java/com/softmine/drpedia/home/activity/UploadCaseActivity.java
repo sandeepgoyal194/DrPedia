@@ -44,7 +44,7 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
         setContentView(R.layout.activity_upload_case);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {

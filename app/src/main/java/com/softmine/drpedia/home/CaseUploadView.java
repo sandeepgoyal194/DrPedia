@@ -2,6 +2,7 @@ package com.softmine.drpedia.home;
 
 import android.support.annotation.StringRes;
 
+import com.softmine.drpedia.home.model.CategoryMainItemResponse;
 import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public interface CaseUploadView extends IView{
     List<String> getDataUri();
 
     String getInterestType();
+
+    public void setUserInterestSize(List<CategoryMainItemResponse> categoryMainItemResponses);
 
     void onCaseTypeEmpty();
 
