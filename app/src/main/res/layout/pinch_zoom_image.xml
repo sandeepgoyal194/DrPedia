@@ -7,9 +7,9 @@
 
     <com.softmine.drpedia.home.activity.TouchImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_centerInParent="true"
-        android:adjustViewBounds="true"
+
         android:layout_height="wrap_content"/>
 
     <ImageView
@@ -17,6 +17,13 @@
         android:src="@drawable/loading1"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_centerInParent="true"/>
 
 </RelativeLayout>

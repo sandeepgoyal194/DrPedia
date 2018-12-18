@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 
@@ -37,6 +38,7 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
     final int MY_PERMISSIONS_REQUEST_READ_MEDIA=1;
 
     protected UploadTaskParameters params = null;
+    UploadCaseFragment uploadCaseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,7 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
     {
 
         if (savedInstanceState == null) {
-            Fragment uploadCaseFragment = new UploadCaseFragment();
+            uploadCaseFragment = new UploadCaseFragment();
 
             Bundle bundle = new Bundle();
             bundle.putParcelable(UploadService.PARAM_TASK_PARAMETERS , params);
@@ -157,6 +159,13 @@ public class UploadCaseActivity extends AppCompatActivity implements HasComponen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        uploadCaseFragment.setTouchEvent(event);
+
+        return super.onTouchEvent(event);
     }
 }
 

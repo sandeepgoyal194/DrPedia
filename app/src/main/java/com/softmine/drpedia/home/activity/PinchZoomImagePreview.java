@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -28,21 +29,28 @@ public class PinchZoomImagePreview extends AppCompatActivity {
 
     String imageUrl;
     String storageSrc;
-
+    ProgressBar bar;
+    TouchImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pinch_zoom_image);
-       TouchImageView imageView = (TouchImageView)findViewById(R.id.imageView);
+       imageView = (TouchImageView)findViewById(R.id.imageView);
       //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loading = (ImageView) findViewById(R.id.loading);
-
+        bar = findViewById(R.id.progress_bar);
         setTitle("");
         imageUrl = getIntent().getStringExtra("picture_url");
         storageSrc = getIntent().getStringExtra("storage_src");
 
         Log.d("loadingimage","path=="+ CaseStudyAPIURL.BASE_URL_image_load+imageUrl);
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         if(storageSrc.equalsIgnoreCase("storage"))
         {
             glide.with(this)
@@ -59,7 +67,7 @@ public class PinchZoomImagePreview extends AppCompatActivity {
                         public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             Log.d("hrview","readey");
 
-                            loading.setVisibility(View.GONE);
+                            bar.setVisibility(View.GONE);
                             return false;
                         }
                     })
@@ -80,7 +88,7 @@ public class PinchZoomImagePreview extends AppCompatActivity {
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             Log.d("loadedimage","readey");
 
-                            loading.setVisibility(View.GONE);
+                            bar.setVisibility(View.GONE);
                             return false;
                         }
                     })

@@ -16,11 +16,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -48,6 +51,7 @@ import com.softmine.drpedia.home.notification.UploadNotificationConfig;
 import com.softmine.drpedia.home.presentor.UploadCasePresentor;
 import com.softmine.drpedia.home.service.UploadService;
 import com.softmine.drpedia.home.service.UploadTaskParameters;
+import com.softmine.drpedia.utils.SwipeGestureListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -143,6 +147,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView, Mate
     List<CaseMediaItem> mediaItemList= new ArrayList<>();
 
     int selected_interest_type;
+    GestureDetectorCompat gestureDetector;
 
     public UploadCaseFragment() {
         //setRetainInstance(true);
@@ -204,6 +209,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView, Mate
         setHasOptionsMenu(true);
         fragmentView =  inflater.inflate(R.layout.upload_case_item, container, false);
         ButterKnife.bind(this,fragmentView);
+
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         //some_array = getResources().getStringArray(R.array.feedback_activity_titles);
 
@@ -237,9 +243,7 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView, Mate
             }
         });
 
-     /*   mediaController= new MediaController(getActivity());
-        mediaController.setAnchorView(videoView);
-*/
+        gestureDetector = new GestureDetectorCompat(getActivity(), new SwipeGestureListener(sheetBehavior));
 
         if(this.params!=null) {
             Log.d("UploadFragmentLog", "params size  " + params.attachmentList.size());
@@ -784,4 +788,11 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView, Mate
                 Toast.LENGTH_SHORT).show();
         type_spinner.setSelectedIndex(view.getSelectedIndex());
     }
+
+
+    public void setTouchEvent(MotionEvent event)
+    {
+        gestureDetector.onTouchEvent(event);
+    }
+
 }
