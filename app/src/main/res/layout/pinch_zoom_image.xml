@@ -8,9 +8,7 @@
     <com.softmine.drpedia.home.activity.TouchImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_centerInParent="true"
-
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/loading"
@@ -24,6 +22,7 @@
         android:id="@+id/progress_bar"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:visibility="gone"
         android:layout_centerInParent="true"/>
 
 </RelativeLayout>

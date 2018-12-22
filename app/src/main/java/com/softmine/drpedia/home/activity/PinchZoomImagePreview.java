@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -56,42 +57,18 @@ public class PinchZoomImagePreview extends AppCompatActivity {
             glide.with(this)
                     .load("file://"+imageUrl)
                     .bitmapTransform(new ScaleBitmapTransformation(this))
-                    .listener(new com.bumptech.glide.request.RequestListener<String, com.bumptech.glide.load.resource.drawable.GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFirstResource) {
-                            Log.d("hrview","false");
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(com.bumptech.glide.load.resource.drawable.GlideDrawable resource, String model, com.bumptech.glide.request.target.Target<com.bumptech.glide.load.resource.drawable.GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            Log.d("hrview","readey");
-
-                            bar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade()
+                    .placeholder(R.drawable.loading3)
                     .into(imageView);
         }
         else
         {
             glide.with(this)
                     .load(CaseStudyAPIURL.BASE_URL_image_load+getIntent().getStringExtra("picture_url"))
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            Log.d("loadedimage","false");
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            Log.d("loadedimage","readey");
-
-                            bar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade()
+                    .placeholder(R.drawable.loading3)
                     .into(imageView);
         }
 
