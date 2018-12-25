@@ -56,7 +56,6 @@ public class PinchZoomImagePreview extends AppCompatActivity {
         {
             glide.with(this)
                     .load("file://"+imageUrl)
-                    .bitmapTransform(new ScaleBitmapTransformation(this))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .crossFade()
                     .placeholder(R.drawable.loading3)

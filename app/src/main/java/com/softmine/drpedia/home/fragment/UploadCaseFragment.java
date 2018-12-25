@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -37,10 +39,12 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.C;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.softmine.drpedia.R;
 import com.softmine.drpedia.home.CaseUploadView;
 import com.softmine.drpedia.home.activity.MultiPhotoSelectActivity;
+import com.softmine.drpedia.home.activity.UploadCaseActivity;
 import com.softmine.drpedia.home.adapter.MediaItemListAdapter;
 import com.softmine.drpedia.home.customview.CaseMediaItemHorizontalRecyclerView;
 import com.softmine.drpedia.home.di.CaseStudyComponent;
@@ -291,6 +295,42 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView, Mate
         return fragmentView;
     }
 
+    boolean keyBoardOpen = false;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                container.getWindowVisibleDisplayFrame(r);
+                int screenHeight = container.getRootView().getHeight();
+
+                // r.bottom is the position above soft keypad or device button.
+                // if keypad is shown, the r.bottom is smaller than that before.
+                int keypadHeight = screenHeight - r.bottom;
+
+               // Log.d(TAG, "keypadHeight = " + keypadHeight);
+
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    // keyboard is opened
+                    Log.d("keyboardLogs" , "open");
+                    if(sheetBehavior.getState()==BottomSheetBehavior.STATE_COLLAPSED || sheetBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }
+                    keyBoardOpen = true;
+                }
+                else {
+                    // keyboard is closed
+                    Log.d("keyboardLogs" , "close");
+                    keyBoardOpen = false;
+
+                }
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -312,8 +352,12 @@ public class UploadCaseFragment extends Fragment implements CaseUploadView, Mate
     {
         if(sheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN)
         {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            openBottomSheet.setVisibility(View.GONE);
+            if(keyBoardOpen)
+                Toast.makeText(container.getContext(), "Close Keyboard first", Toast.LENGTH_LONG).show();
+            else {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                openBottomSheet.setVisibility(View.GONE);
+            }
         }
     }
 

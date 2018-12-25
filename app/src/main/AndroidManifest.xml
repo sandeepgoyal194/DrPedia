@@ -32,7 +32,8 @@
             android:theme="@style/DashBoardTheme" />
         <activity
             android:name=".home.activity.CaseDiscussionDetail"
-            android:theme="@style/AppTheme.ActionBar.Transparent" />
+            android:theme="@style/AppTheme.ActionBar.Transparent"
+            android:parentActivityName=".home.activity.DashBoardActivity"/>
         <activity android:name=".home.activity.UploadCaseActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity

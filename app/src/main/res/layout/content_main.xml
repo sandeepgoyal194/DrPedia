@@ -73,6 +73,7 @@
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/interest_type_spinner"
                     app:ms_dropdown_max_height="350dp"
+                    android:textColor="@color/black"
                     app:ms_dropdown_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -121,5 +122,5 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_gravity="bottom"
-        android:src="@drawable/up_icon" />
+        android:src="@drawable/uparrow1" />
 </RelativeLayout>
