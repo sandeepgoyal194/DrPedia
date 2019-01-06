@@ -59,12 +59,18 @@ public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.CaseVi
 
     @Override
     public CaseListAdapter.CaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        Log.d("adapterlogs" , "onCreateViewHolder");
+
         final View view = this.layoutInflater.inflate(R.layout.case_item, parent, false);
         return new CaseViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(CaseListAdapter.CaseViewHolder holder, int position) {
+
+        Log.d("adapterlogs" , "onBindViewHolder  "+position);
+
         final CaseItem caseItem = this.caseCollection.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {

@@ -94,13 +94,13 @@ public class DashBoardActivity extends AppCompatActivity implements DashBoardFra
     final int MY_PERMISSIONS_REQUEST_READ_MEDIA=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.initializeInjector();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         ButterKnife.bind(this);
 
         Log.d("navupdate","oncreate");
 
-        this.initializeInjector();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

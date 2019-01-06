@@ -20,6 +20,14 @@ import frameworks.di.component.HasComponent;
 public class CaseDiscussionDetail extends AppCompatActivity implements HasComponent<CaseStudyComponent> {
 
     private CaseStudyComponent caseStudyComponent;
+
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
     CaseItem caseItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

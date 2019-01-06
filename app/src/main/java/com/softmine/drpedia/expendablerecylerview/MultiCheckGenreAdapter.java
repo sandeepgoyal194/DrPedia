@@ -11,12 +11,24 @@ import com.softmine.drpedia.home.model.SubCategoryItem;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MultiCheckGenreAdapter extends
     CheckableChildRecyclerViewAdapter<GenreViewHolder, MultiCheckArtistViewHolder> {
 
+
+  int size , index=0;
+  Map<Integer,Integer> groupINdexMap = new TreeMap<>();
+
   public MultiCheckGenreAdapter(List<CategoryMainItem> groups) {
     super(groups);
+    size = groups.size();
+    for(CategoryMainItem num : groups)
+    {
+      groupINdexMap.put(index , num.getItems().size());
+      index = index+num.getItems().size()+1;
+    }
     Log.d("categoryListItems" , "MultiCheckGenreAdapter size : "+groups.size());
   }
 
@@ -49,4 +61,17 @@ public class MultiCheckGenreAdapter extends
     Log.d("categoryListItems" , "main title  "+group.getTitle());
     holder.setGenreTitle(group);
   }
+
+  public void toggleAllGroup()
+  {
+    for(Integer num : groupINdexMap.keySet())
+    {
+      if(!isGroupExpanded(num))
+      {
+        toggleGroup(num);
+      }
+    }
+  }
+
+
 }

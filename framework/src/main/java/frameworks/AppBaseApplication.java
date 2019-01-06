@@ -33,18 +33,23 @@ public class AppBaseApplication extends Application {
         super.onCreate();
         mApplication = this;
         printHashKey();
+        this.initializeInjector();
         JodaTimeAndroid.init(this);
         FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
     }
 
     private BaseAppComponent baseAppComponent;
 
-    public BaseAppComponent getBaseAppComponent(){
+    private void initializeInjector() {
         if (baseAppComponent == null) {
             DaggerBaseAppComponent.Builder daggerBuilder = DaggerBaseAppComponent.builder()
                     .appModule(new AppModule(this));
             baseAppComponent = daggerBuilder.build();
         }
+    }
+
+    public BaseAppComponent getBaseAppComponent(){
+
         return baseAppComponent;
     }
     public void printHashKey(){

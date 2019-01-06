@@ -85,6 +85,13 @@ public class MediaItemListAdapter extends RecyclerView.Adapter<MediaItemListAdap
         this.mContext = context;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+
+
 
     @Override
     public MediaItemListAdapter.CategoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {

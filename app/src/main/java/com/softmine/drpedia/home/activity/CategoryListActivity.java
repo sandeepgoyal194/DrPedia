@@ -252,6 +252,7 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
             }
 
             adapter.notifyDataSetChanged();
+            adapter.toggleAllGroup();
         }
         else
         {
