@@ -68,6 +68,7 @@
 
 
         <ImageView
+            android:tint="@color/colorPrimary"
             android:id="@+id/img_comment"
             android:layout_width="30dp"
             android:layout_height="30dp"

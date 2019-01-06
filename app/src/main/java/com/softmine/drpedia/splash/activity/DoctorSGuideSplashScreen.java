@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.softmine.drpedia.CaseStudyAppApplication;
 import com.softmine.drpedia.R;
@@ -71,7 +72,6 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity implements Splas
         this.initInjector();
 
         userManager = new UserManager(this);
-
     }
 
     @Override
@@ -169,16 +169,19 @@ public class DoctorSGuideSplashScreen extends AppCompatActivity implements Splas
 
     @Override
     public Context getContext() {
-        return null;
+        return getApplicationContext();
     }
 
     @Override
     public void showSnackBar(String message) {
         Log.d("splashresponse"," showSnackBar called");
         Log.d("splashresponse"," message  === "+message);
-        Snackbar snackbar = Snackbar
+       /* Snackbar snackbar = Snackbar
                 .make(splashContainer, message, Snackbar.LENGTH_LONG);
-        snackbar.show();
+        snackbar.show();*/
+
+
+        Toast.makeText(this,message,Toast.LENGTH_LONG).show();
     }
 
     @Override

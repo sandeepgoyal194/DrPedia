@@ -36,11 +36,28 @@ public class SplashScreenPresentor implements ISplashScreenPresentor{
     }
 
     public void setView(@NonNull SplashScreenView splashScreenView) {
+
+        Log.d("splashresponse"," setView called");
         this.splashScreenView = splashScreenView;
+
+        if(this.splashScreenView.getContext()!=null)
+        {
+            Log.d("splashresponse"," context not null.. proceed to show toast");
+        }
+        else
+        {
+            Log.d("splashresponse"," setView called with null");
+        }
     }
 
     private void showErrorMessage(ErrorBundle errorBundle) {
         Log.d("splashresponse"," showErrorMessage called");
+
+        if(this.splashScreenView.getContext()!=null)
+        {
+            Log.d("splashresponse"," context not null.. proceed to show toast");
+        }
+
         String errorMessage = ErrorMessageFactory.create(this.splashScreenView.getContext(),
                 errorBundle.getException());
         Log.d("splashresponse"," showErrorMessage message "+errorMessage);
@@ -50,6 +67,12 @@ public class SplashScreenPresentor implements ISplashScreenPresentor{
     @Override
     public void getUserInterest() {
         Log.d("splashresponse"," getUserInterest called");
+
+        if(this.splashScreenView.getContext()!=null)
+        {
+            Log.d("splashresponse"," context not null.. proceed to show toast");
+        }
+
       this.splashScreenUseCase.execute(RequestParams.EMPTY, new Subscriber<List<CategoryMainItemResponse>>() {
           @Override
           public void onCompleted() {
@@ -76,6 +99,7 @@ public class SplashScreenPresentor implements ISplashScreenPresentor{
                   else if(e instanceof NetworkConnectionException)
                   {
                       Log.d("splashresponse","NetworkConnectionExceptions");
+
                       SplashScreenPresentor.this.showErrorMessage(new DefaultErrorBundle(new NetworkConnectionException()));
                   }
                   else
